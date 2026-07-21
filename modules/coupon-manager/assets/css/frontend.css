@@ -1,0 +1,465 @@
+/**
+ * WooCommerce Coupon Display Manager — Frontend Styles
+ *
+ * Minimalist, Modern, and Professional UI/UX Redesign
+ * Scoped with .wcdm- prefix to avoid theme conflicts.
+ *
+ * @since 1.2.0
+ */
+
+/* ==========================================================================
+   0. CSS Variables & Reset
+   ========================================================================== */
+:root {
+	--wcdm-primary        : #0f172a; /* Slate 900 - sleek and professional */
+	--wcdm-primary-dark   : #020617; /* Slate 950 */
+	--wcdm-primary-light  : #f8fafc; /* Slate 50 */
+	--wcdm-primary-border : #e2e8f0; /* Slate 200 */
+	--wcdm-primary-hover  : #1e293b; /* Slate 800 */
+	
+	--wcdm-success        : #10b981; /* Emerald 500 */
+	--wcdm-success-dark   : #047857; /* Emerald 700 */
+	--wcdm-success-bg     : #f0fdf4; /* Emerald 50 */
+	--wcdm-success-border : #bbf7d0; /* Emerald 200 */
+	
+	--wcdm-danger         : #ef4444; /* Red 500 */
+	--wcdm-danger-dark    : #b91c1c; /* Red 700 */
+	--wcdm-border         : #e2e8f0; /* Slate 200 */
+	--wcdm-border-mid     : #cbd5e1; /* Slate 300 */
+	
+	--wcdm-radius         : 8px;     /* Crisp, modern radius */
+	--wcdm-radius-sm      : 6px;
+	--wcdm-input-h        : 42px;    /* Clean standard height */
+	--wcdm-font-sm        : 12px;
+	--wcdm-font-base      : 14px;
+	--wcdm-transition     : all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+	--wcdm-shadow         : 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* Imperceptible soft shadow */
+	--wcdm-shadow-hover   : 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+
+	/* Overridden by inline <style> when "Custom Color" is selected */
+	--wcdm-btn-bg         : #6c757d;
+	--wcdm-btn-color      : #ffffff;
+	--wcdm-btn-hover-bg   : #5a6268;
+	--wcdm-btn-hover-color: #ffffff;
+}
+
+/* ==========================================================================
+   1. Repositioned Coupon Widget Card
+   ========================================================================== */
+.wcdm-checkout-coupon-repositioned {
+	margin        : 20px 0;
+	padding       : 16px;
+	background    : #ffffff;
+	border        : 1px solid var(--wcdm-border);
+	border-radius : var(--wcdm-radius);
+	box-shadow    : var(--wcdm-shadow);
+	box-sizing    : border-box;
+	width         : 100%;
+	transition    : var(--wcdm-transition);
+}
+
+.wcdm-checkout-coupon-repositioned:hover {
+	border-color  : var(--wcdm-border-mid);
+	box-shadow    : var(--wcdm-shadow-hover);
+}
+
+/* Input + button row */
+.wcdm-checkout-coupon-repositioned .wcdm-coupon-input-wrapper {
+	display       : flex;
+	flex-wrap     : wrap;
+	gap           : 10px;
+	width         : 100%;
+	align-items   : stretch;
+}
+
+/* Text input */
+.wcdm-checkout-coupon-repositioned input.input-text {
+	flex          : 1 1 180px;
+	min-width     : 0;
+	height        : var(--wcdm-input-h) !important;
+	padding       : 8px 14px !important;
+	border        : 1px solid var(--wcdm-border-mid) !important;
+	border-radius : var(--wcdm-radius-sm) !important;
+	font-size     : var(--wcdm-font-base) !important;
+	font-family   : inherit !important;
+	background    : #ffffff !important;
+	box-shadow    : none !important;
+	box-sizing    : border-box !important;
+	transition    : var(--wcdm-transition) !important;
+}
+
+.wcdm-checkout-coupon-repositioned input.input-text:focus {
+	border-color  : var(--wcdm-primary) !important;
+	box-shadow    : 0 0 0 1px var(--wcdm-primary) !important;
+	outline       : none !important;
+}
+
+/* Hint text */
+.wcdm-coupon-hint {
+	display       : block;
+	width         : 100%;
+	margin-top    : 6px;
+	font-size     : var(--wcdm-font-sm);
+	color         : #64748b;
+}
+
+/* Custom positioning helpers */
+.wc-block-checkout__actions .wc-block-checkout__actions_row--justify-flex-end {
+	flex-direction: column !important;
+}
+
+/* ==========================================================================
+   2. Apply Button Style Presets
+   ========================================================================== */
+
+#wcdm_apply_coupon_mock,
+.wcdm-btn-secondary,
+.wcdm-btn-link,
+.wcdm-btn-custom {
+	display         : inline-flex !important;
+	align-items     : center !important;
+	justify-content : center !important;
+	height          : var(--wcdm-input-h) !important;
+	padding         : 0 18px !important;
+	border-radius   : var(--wcdm-radius-sm) !important;
+	font-size       : var(--wcdm-font-base) !important;
+	font-weight     : 500 !important;
+	cursor          : pointer !important;
+	box-sizing      : border-box !important;
+	transition      : var(--wcdm-transition) !important;
+	text-shadow     : none !important;
+	line-height     : 1 !important;
+	white-space     : nowrap !important;
+	flex-shrink     : 0;
+	border          : 1px solid transparent;
+}
+
+#wcdm_apply_coupon_mock:active {
+	transform       : scale(0.98);
+}
+
+/* Secondary — elegant outline */
+.wcdm-btn-secondary {
+	background      : #ffffff !important;
+	color           : var(--wcdm-primary) !important;
+	border          : 1px solid var(--wcdm-border-mid) !important;
+	box-shadow      : 0 1px 1px 0 rgba(0, 0, 0, 0.05) !important;
+	width           : auto !important;
+}
+
+.wcdm-btn-secondary:hover {
+	background      : #f8fafc !important;
+	color           : var(--wcdm-primary-dark) !important;
+	border-color    : var(--wcdm-primary-hover) !important;
+}
+
+/* Link — text only link button */
+.wcdm-btn-link {
+	background      : none !important;
+	border          : none !important;
+	color           : #4f46e5 !important; /* Soft minimal indigo */
+	text-decoration : none !important;
+	box-shadow      : none !important;
+	padding         : 0 8px !important;
+	width           : auto !important;
+}
+
+.wcdm-btn-link:hover {
+	color           : #3730a3 !important;
+	text-decoration : underline !important;
+}
+
+/* Custom Color Presets */
+.wcdm-btn-custom {
+	background-color: var(--wcdm-btn-bg) !important;
+	color           : var(--wcdm-btn-color) !important;
+	border          : 1px solid var(--wcdm-btn-bg) !important;
+	width           : auto !important;
+}
+
+.wcdm-btn-custom:hover {
+	background-color: var(--wcdm-btn-hover-bg) !important;
+	color           : var(--wcdm-btn-hover-color) !important;
+	border-color    : var(--wcdm-btn-hover-bg) !important;
+}
+
+/* ==========================================================================
+   3. Available Coupons List (Minimalist Clean Badges)
+   ========================================================================== */
+.wcdm-available-coupons-container {
+	margin        : 0 0 14px;
+	padding       : 0 0 12px;
+	border-bottom : 1px solid var(--wcdm-border);
+	width         : 100%;
+	box-sizing    : border-box;
+}
+
+.wcdm-coupon-list-title {
+	font-size       : 11px !important;
+	font-weight     : 600 !important;
+	color           : #475569 !important;
+	margin          : 0 0 8px !important;
+	text-transform  : uppercase;
+	letter-spacing  : 0.5px;
+}
+
+.wcdm-coupon-list-badges {
+	display         : flex;
+	flex-wrap       : wrap;
+	gap             : 8px;
+}
+
+/* Clean Flat Coupon Badges */
+.wcdm-coupon-badge-item {
+	position          : relative;
+	display           : flex;
+	flex-direction    : column;
+	background        : #f8fafc;
+	border            : 1px solid #e2e8f0;
+	border-radius     : var(--wcdm-radius-sm);
+	padding           : 8px 12px;
+	cursor            : pointer;
+	transition        : var(--wcdm-transition);
+	min-width         : 80px;
+	-webkit-user-select: none;
+	user-select       : none;
+	box-sizing        : border-box;
+}
+
+.wcdm-coupon-badge-item:hover,
+.wcdm-coupon-badge-item:focus {
+	background       : #f1f5f9;
+	border-color     : #cbd5e1;
+	outline          : none;
+}
+
+.wcdm-badge-code {
+	font-size        : 12px !important;
+	font-weight      : 600 !important;
+	color            : var(--wcdm-primary) !important;
+	text-transform   : uppercase;
+	letter-spacing   : 0.5px;
+}
+
+.wcdm-badge-desc {
+	font-size        : 11px !important;
+	color            : #64748b !important;
+	margin-top       : 2px;
+	line-height      : 1.3;
+}
+
+/* ==========================================================================
+   4. Applied Coupon Pill
+   ========================================================================== */
+.wcdm-checkout-coupon-repositioned.wcdm-coupon-applied-state {
+	background      : var(--wcdm-success-bg) !important;
+	border          : 1px solid var(--wcdm-success-border) !important;
+	box-shadow      : none;
+}
+
+.wcdm-coupon-applied-pill {
+	display         : flex;
+	align-items     : center;
+	gap             : 8px;
+	font-size       : var(--wcdm-font-base);
+	color           : var(--wcdm-success-dark);
+	flex-wrap       : wrap;
+	width           : 100%;
+}
+
+.wcdm-pill-check {
+	display         : inline-flex;
+	align-items     : center;
+	justify-content : center;
+	background-color: var(--wcdm-success);
+	color           : #ffffff;
+	width           : 18px;
+	height          : 18px;
+	border-radius   : 50%;
+	font-size       : 10px;
+	font-weight     : bold;
+	flex-shrink     : 0;
+}
+
+.wcdm-pill-label {
+	font-weight     : 500;
+}
+
+.wcdm-pill-label strong {
+	font-weight     : 600;
+	color           : #064e3b;
+	background      : #dcfce7;
+	padding         : 1px 6px;
+	border-radius   : 4px;
+	margin          : 0 4px;
+}
+
+.wcdm-remove-coupon {
+	color           : var(--wcdm-danger) !important;
+	text-decoration : none !important;
+	margin-left     : auto;
+	font-weight     : 500;
+	cursor          : pointer;
+	transition      : var(--wcdm-transition);
+	font-size       : var(--wcdm-font-sm);
+}
+
+.wcdm-remove-coupon:hover {
+	color           : var(--wcdm-danger-dark) !important;
+	text-decoration : underline !important;
+}
+
+/* Suppress duplicate WC success notice when pill is active */
+body.wcdm-coupon-active .woocommerce-message {
+	display: none !important;
+}
+
+/* ==========================================================================
+   5. Responsive Styles
+   ========================================================================== */
+
+/* Tablet (≤ 768px) */
+@media ( max-width: 768px ) {
+	.wcdm-checkout-coupon-repositioned .wcdm-coupon-input-wrapper {
+		flex-wrap: wrap;
+	}
+}
+
+/* Mobile (≤ 600px) */
+@media ( max-width: 600px ) {
+	.wcdm-checkout-coupon-repositioned {
+		padding       : 14px;
+	}
+
+	.wcdm-checkout-coupon-repositioned .wcdm-coupon-input-wrapper {
+		flex-direction: column;
+	}
+
+	.wcdm-checkout-coupon-repositioned input.input-text {
+		flex          : 1 1 100% !important;
+		width         : 100% !important;
+	}
+
+	#wcdm_apply_coupon_mock,
+	.wcdm-btn-secondary,
+	.wcdm-btn-link,
+	.wcdm-btn-custom {
+		width         : 100% !important;
+		justify-content: center !important;
+	}
+
+	.wcdm-coupon-list-badges {
+		display       : grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap           : 6px;
+	}
+
+	.wcdm-coupon-applied-pill {
+		flex-wrap     : wrap;
+		row-gap       : 6px;
+	}
+
+	.wcdm-remove-coupon {
+		margin-left   : 0;
+		width         : 100%;
+		text-align    : left;
+	}
+}
+
+/* Very Small Screens (≤ 380px) */
+@media ( max-width: 380px ) {
+	.wcdm-coupon-list-badges {
+		grid-template-columns: 1fr;
+	}
+}
+
+/* Applied State for Coupon Badges */
+.wcdm-coupon-badge-item.wcdm-badge-applied {
+	background     : #ecfdf5 !important;
+	border-color   : #a7f3d0 !important;
+	border-style   : solid !important;
+	cursor         : default !important;
+	pointer-events : none !important;
+	box-shadow     : none !important;
+	transform      : none !important;
+}
+
+.wcdm-coupon-badge-item.wcdm-badge-applied .wcdm-badge-code {
+	color          : #065f46 !important;
+}
+
+.wcdm-coupon-badge-item.wcdm-badge-applied .wcdm-badge-desc {
+	color          : #047857 !important;
+}
+
+.wcdm-badge-check {
+	display        : inline-flex;
+	margin-left    : 4px;
+	color          : #059669;
+	font-weight     : 600;
+	font-size      : 11px;
+}
+
+/* ==========================================================================
+   6. Collapsible Dropdown Layout
+   ========================================================================== */
+.wcdm-checkout-coupon-repositioned.wcdm-layout-dropdown-hide {
+	background: transparent;
+	border: none;
+	box-shadow: none;
+	padding: 0;
+	margin: 10px 0;
+	transition: var(--wcdm-transition);
+}
+
+/* Re-apply standard card styling when the dropdown is open or coupon is applied */
+.wcdm-checkout-coupon-repositioned.wcdm-layout-dropdown-hide.wcdm-dropdown-open,
+.wcdm-checkout-coupon-repositioned.wcdm-layout-dropdown-hide.wcdm-coupon-applied-state {
+	background: #ffffff;
+	border: 1px solid var(--wcdm-border);
+	box-shadow: var(--wcdm-shadow);
+	padding: 16px;
+}
+
+.wcdm-checkout-coupon-repositioned.wcdm-layout-dropdown-hide.wcdm-coupon-applied-state {
+	background: var(--wcdm-success-bg) !important;
+	border: 1px solid var(--wcdm-success-border) !important;
+}
+
+/* Dropdown Toggle Trigger Link */
+.wcdm-dropdown-toggle {
+	display: inline-flex !important;
+	align-items: center;
+	font-size: var(--wcdm-font-base);
+	font-weight: 500;
+	color: #4f46e5 !important; /* Premium Indigo */
+	text-decoration: none !important;
+	cursor: pointer;
+	transition: var(--wcdm-transition);
+	margin-bottom: 0px;
+	padding: 4px 0;
+}
+
+.wcdm-dropdown-toggle:hover {
+	color: #3730a3 !important;
+	text-decoration: underline !important;
+}
+
+/* Animated Caret Indicator */
+.wcdm-dropdown-toggle::after {
+	content: '';
+	display: inline-block;
+	width: 6px;
+	height: 6px;
+	border-right: 2px solid currentColor;
+	border-bottom: 2px solid currentColor;
+	transform: rotate(45deg);
+	margin-left: 8px;
+	margin-top: -3px;
+	transition: transform 0.2s ease;
+}
+
+.wcdm-dropdown-toggle.wcdm-dropdown-active::after {
+	transform: rotate(-135deg);
+	margin-top: 1px;
+}

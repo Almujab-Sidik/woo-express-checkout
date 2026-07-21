@@ -1,0 +1,756 @@
+/* Custom Frontend Styles for WooCommerce Upsell & Bundle (Shadcn-inspired Design) */
+
+:root {
+	/* Shadcn Zinc / Slate Premium Theme Variables */
+	--background: #ffffff;
+	--foreground: #09090b; /* zinc-950 */
+	--border: #e4e4e7; /* zinc-200 */
+	--input: #e4e4e7; /* zinc-200 */
+	--ring: #09090b; /* zinc-950 */
+	--muted: #f4f4f5; /* zinc-100 */
+	--muted-foreground: #71717a; /* zinc-500 */
+
+	--primary: #18181b; /* zinc-900 */
+	--primary-foreground: #fafafa; /* zinc-50 */
+	--secondary: #f4f4f5; /* zinc-100 */
+	--secondary-foreground: #18181b; /* zinc-900 */
+
+	--success: #10b981; /* emerald-500 */
+	--success-foreground: #ffffff;
+	--destructive: #ef4444; /* red-500 */
+	--destructive-foreground: #ffffff;
+
+	/* Layout & Shadows */
+	--radius: 8px;
+	--radius-sm: 6px;
+	--radius-lg: 12px;
+
+	--shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+	--shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+	--shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+	--shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+}
+
+/* ==========================================================================
+   1. GLOBAL STYLING COMPONENT (Shadcn-like custom input checkboxes & radios)
+   ========================================================================== */
+
+/* Custom styled Checkbox */
+.woocommerce-checkout input[type="checkbox"],
+.bump-checkbox-wrapper input[type="checkbox"] {
+	appearance: none !important;
+	-webkit-appearance: none !important;
+	width: 16px !important;
+	height: 16px !important;
+	border: 1px solid var(--border) !important;
+	border-radius: 4px !important;
+	background-color: #ffffff !important;
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	cursor: pointer !important;
+	position: relative !important;
+	transition: all 0.15s ease !important;
+	outline: none !important;
+	padding: 0 !important;
+	margin: 0 !important;
+}
+
+.woocommerce-checkout input[type="checkbox"]:hover,
+.bump-checkbox-wrapper input[type="checkbox"]:hover {
+	border-color: #a1a1aa !important; /* zinc-400 */
+}
+
+.woocommerce-checkout input[type="checkbox"]:checked,
+.bump-checkbox-wrapper input[type="checkbox"]:checked {
+	background-color: var(--primary) !important;
+	border-color: var(--primary) !important;
+}
+
+.woocommerce-checkout input[type="checkbox"]:checked::after,
+.bump-checkbox-wrapper input[type="checkbox"]:checked::after {
+	content: "" !important;
+	display: block !important;
+	width: 4px !important;
+	height: 8px !important;
+	border: solid #ffffff !important;
+	border-width: 0 2px 2px 0 !important;
+	transform: rotate(45deg) !important;
+	position: absolute !important;
+	top: 2px !important;
+	left: 5px !important;
+}
+
+.woocommerce-checkout input[type="checkbox"]:focus-visible,
+.bump-checkbox-wrapper input[type="checkbox"]:focus-visible {
+	box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px rgba(24, 24, 27, 0.1) !important;
+}
+
+/* Custom styled Radio Button */
+.woocommerce-checkout #payment ul.payment_methods li input[type="radio"] {
+	appearance: none !important;
+	-webkit-appearance: none !important;
+	width: 16px !important;
+	height: 16px !important;
+	border: 1px solid var(--border) !important;
+	border-radius: 50% !important;
+	background-color: #ffffff !important;
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	cursor: pointer !important;
+	position: relative !important;
+	transition: all 0.15s ease !important;
+	outline: none !important;
+	margin-right: 10px !important;
+	vertical-align: middle !important;
+	padding: 0 !important;
+}
+
+.woocommerce-checkout #payment ul.payment_methods li input[type="radio"]:hover {
+	border-color: #a1a1aa !important;
+}
+
+.woocommerce-checkout #payment ul.payment_methods li input[type="radio"]:checked {
+	border-color: var(--primary) !important;
+	background-color: #ffffff !important;
+}
+
+.woocommerce-checkout #payment ul.payment_methods li input[type="radio"]:checked::after {
+	content: "" !important;
+	display: block !important;
+	width: 6px !important;
+	height: 6px !important;
+	border-radius: 50% !important;
+	background-color: var(--primary) !important;
+}
+
+.woocommerce-checkout #payment ul.payment_methods li input[type="radio"]:focus-visible {
+	box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px rgba(24, 24, 27, 0.1) !important;
+}
+
+/* ==========================================================================
+   2. ORDER BUMP STYLING (Checkout Page)
+   ========================================================================== */
+.upsell-bundle-checkout-bumps {
+	background: #ffffff !important;
+	border: none !important;
+	border-top: 1px solid var(--border) !important;
+	border-radius: 0 !important;
+	padding: 20px 0 0 !important;
+	margin: 20px 0 0 !important;
+	box-shadow: none !important;
+	font-family: inherit;
+}
+
+.upsell-bundle-checkout-bumps h4 {
+	margin: 0 0 14px 0 !important;
+	font-size: 14px !important;
+	font-weight: 600 !important;
+	color: var(--foreground) !important;
+	display: flex !important;
+	align-items: center !important;
+	gap: 8px !important;
+	letter-spacing: -0.02em !important;
+}
+
+.upsell-bundle-checkout-bumps h4::before {
+	content: "🔥";
+	font-size: 14px;
+}
+
+.upsell-bundle-bump-card {
+	display: flex !important;
+	align-items: flex-start !important;
+	background: #ffffff !important;
+	border: none !important;
+	border-radius: 0 !important;
+	padding: 14px 0 !important;
+	border-bottom: 1px solid var(--border) !important;
+	transition: background-color 0.15s ease-in-out !important;
+	position: relative !important;
+	margin-bottom: 0 !important;
+	box-shadow: none !important;
+}
+
+.upsell-bundle-bump-card:last-child {
+	border-bottom: none !important;
+}
+
+.upsell-bundle-bump-card.bump-checked {
+	background: var(--muted) !important;
+}
+
+.upsell-bundle-bump-card.bump-loading {
+	opacity: 0.6 !important;
+	pointer-events: none !important;
+}
+
+.bump-checkbox-wrapper {
+	padding-right: 14px !important;
+	display: flex !important;
+	align-items: center !important;
+	height: 20px !important; /* Centered with first line of title */
+}
+
+.bump-image {
+	width: 56px !important;
+	height: 56px !important;
+	flex-shrink: 0 !important;
+	margin-right: 14px !important;
+	border-radius: 0 !important;
+	overflow: hidden !important;
+	border: none !important;
+	background: var(--muted) !important;
+}
+
+.bump-image img {
+	width: 100% !important;
+	height: 100% !important;
+	object-fit: cover !important;
+}
+
+.bump-details {
+	flex-grow: 1 !important;
+	padding-right: 14px !important;
+}
+
+.bump-title {
+	font-weight: 500 !important;
+	font-size: 14px !important;
+	color: var(--foreground) !important;
+	cursor: pointer !important;
+	margin-bottom: 4px !important;
+	display: inline-block !important;
+	line-height: 1.4 !important;
+}
+
+.bump-desc {
+	margin: 0 !important;
+	font-size: 13px !important;
+	color: var(--muted-foreground) !important;
+	line-height: 1.4 !important;
+}
+
+.bump-pricing {
+	text-align: right !important;
+	flex-shrink: 0 !important;
+	display: flex !important;
+	flex-direction: column !important;
+	justify-content: flex-start !important;
+	align-items: flex-end !important;
+}
+
+.bump-pricing .original-price {
+	text-decoration: line-through !important;
+	font-size: 12px !important;
+	color: var(--muted-foreground) !important;
+	margin-bottom: 2px !important;
+}
+
+.bump-pricing .bump-price-val {
+	font-weight: 600 !important;
+	color: var(--destructive) !important;
+	font-size: 14px !important;
+}
+
+/* Mobile: pricing wraps to its own row instead of squeezing title/desc
+   into a narrow column — this is what caused the badly-wrapped text seen
+   on small screens (title/desc pushed into a ~100px sliver). */
+@media (max-width: 480px) {
+	.upsell-bundle-checkout-bumps {
+		padding: 16px 0 0 !important;
+	}
+
+	.upsell-bundle-bump-card {
+		flex-wrap: wrap !important;
+		padding: 12px 0 !important;
+	}
+
+	.bump-image {
+		width: 44px !important;
+		height: 44px !important;
+		margin-right: 10px !important;
+	}
+
+	.bump-checkbox-wrapper {
+		padding-right: 10px !important;
+	}
+
+	.bump-details {
+		flex-basis: 0 !important;
+		padding-right: 0 !important;
+	}
+
+	.bump-pricing {
+		flex-basis: 100% !important;
+		flex-direction: row !important;
+		justify-content: flex-end !important;
+		align-items: baseline !important;
+		gap: 8px !important;
+		margin-top: 8px !important;
+	}
+}
+
+/* ==========================================================================
+   3. PRODUCT BUNDLE STYLING (Single Product Page)
+   ========================================================================== */
+.upsell-bundle-box {
+	background: #ffffff !important;
+	border: 1px solid var(--border) !important;
+	border-radius: var(--radius-lg) !important;
+	padding: 24px !important;
+	margin: 32px 0 !important;
+	box-shadow: var(--shadow) !important;
+}
+
+.upsell-bundle-box h3 {
+	margin: 0 0 6px 0 !important;
+	font-size: 18px !important;
+	font-weight: 600 !important;
+	color: var(--foreground) !important;
+	letter-spacing: -0.4px !important;
+}
+
+.bundle-subtitle {
+	margin: 0 0 20px 0 !important;
+	font-size: 14px !important;
+	color: var(--muted-foreground) !important;
+	line-height: 1.4 !important;
+}
+
+.bundle-items-list {
+	display: flex !important;
+	align-items: center !important;
+	justify-content: space-between !important;
+	gap: 12px !important;
+	margin-bottom: 24px !important;
+}
+
+.bundle-item-card {
+	flex: 1 !important;
+	background: #ffffff !important;
+	border: 1px solid var(--border) !important;
+	border-radius: var(--radius) !important;
+	padding: 16px !important;
+	display: flex !important;
+	flex-direction: column !important;
+	align-items: center !important;
+	text-align: center !important;
+	box-sizing: border-box !important;
+	min-width: 120px !important;
+	box-shadow: var(--shadow-sm) !important;
+	transition: all 0.2s ease !important;
+}
+
+.bundle-item-card:hover {
+	border-color: #cbd5e1 !important;
+	box-shadow: var(--shadow) !important;
+}
+
+.bundle-item-image {
+	width: 72px !important;
+	height: 72px !important;
+	border-radius: var(--radius-sm) !important;
+	overflow: hidden !important;
+	margin-bottom: 10px !important;
+	border: 1px solid var(--border) !important;
+	background: #ffffff !important;
+}
+
+.bundle-item-image img {
+	width: 100% !important;
+	height: 100% !important;
+	object-fit: cover !important;
+}
+
+.bundle-item-info {
+	display: flex !important;
+	flex-direction: column !important;
+	align-items: center !important;
+	gap: 4px !important;
+	width: 100% !important;
+}
+
+.bundle-item-title {
+	font-size: 13px !important;
+	font-weight: 500 !important;
+	color: var(--foreground) !important;
+	line-height: 1.3 !important;
+	display: -webkit-box !important;
+	-webkit-line-clamp: 2 !important;
+	-webkit-box-orient: vertical !important;
+	overflow: hidden !important;
+	height: 34px !important;
+	text-align: center !important;
+	margin: 0 !important;
+}
+
+.bundle-item-price {
+	font-size: 12px !important;
+	font-weight: 600 !important;
+	color: var(--muted-foreground) !important;
+}
+
+.bundle-plus-icon {
+	width: 28px !important;
+	height: 28px !important;
+	border-radius: 50% !important;
+	background: var(--muted) !important;
+	border: 1px solid var(--border) !important;
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	font-size: 14px !important;
+	font-weight: 500 !important;
+	color: var(--muted-foreground) !important;
+	user-select: none !important;
+	flex-shrink: 0 !important;
+}
+
+/* Stacking Grid on mobile/tablets to prevent wrap bugs */
+@media (max-width: 640px) {
+	.bundle-items-list {
+		flex-direction: column !important;
+		gap: 8px !important;
+	}
+	.bundle-item-card {
+		width: 100% !important;
+		flex-direction: row !important;
+		text-align: left !important;
+		align-items: center !important;
+		padding: 12px !important;
+	}
+	.bundle-item-image {
+		margin-bottom: 0 !important;
+		margin-right: 14px !important;
+		width: 56px !important;
+		height: 56px !important;
+	}
+	.bundle-item-info {
+		align-items: flex-start !important;
+		gap: 2px !important;
+	}
+	.bundle-item-title {
+		height: auto !important;
+		-webkit-line-clamp: 1 !important;
+		text-align: left !important;
+		font-size: 13px !important;
+	}
+	.bundle-plus-icon {
+		transform: rotate(90deg) !important;
+		margin: 2px 0 !important;
+	}
+}
+
+.bundle-footer-summary {
+	display: flex !important;
+	align-items: center !important;
+	justify-content: space-between !important;
+	flex-wrap: wrap !important;
+	gap: 20px !important;
+	border-top: 1px solid var(--border) !important;
+	padding-top: 20px !important;
+	margin-top: 10px !important;
+}
+
+.bundle-pricing-summary {
+	display: flex !important;
+	flex-direction: column !important;
+	gap: 2px !important;
+}
+
+.bundle-price-label {
+	font-size: 11px !important;
+	color: var(--muted-foreground) !important;
+	text-transform: uppercase !important;
+	letter-spacing: 0.5px !important;
+	font-weight: 500 !important;
+}
+
+.bundle-price-box {
+	display: flex !important;
+	align-items: baseline !important;
+	gap: 8px !important;
+}
+
+.bundle-original-strike {
+	text-decoration: line-through !important;
+	color: var(--muted-foreground) !important;
+	font-size: 14px !important;
+}
+
+.bundle-final-price {
+	font-size: 18px !important;
+	font-weight: 700 !important;
+	color: var(--destructive) !important;
+}
+
+.upsell-add-bundle-btn {
+	background-color: var(--primary) !important;
+	color: var(--primary-foreground) !important;
+	padding: 10px 18px !important;
+	font-size: 14px !important;
+	font-weight: 500 !important;
+	border-radius: var(--radius-sm) !important;
+	border: 1px solid var(--primary) !important;
+	transition: all 0.15s ease-in-out !important;
+	cursor: pointer !important;
+	box-shadow: var(--shadow-sm) !important;
+	text-decoration: none !important;
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+}
+
+.upsell-add-bundle-btn:not(:disabled):hover {
+	background-color: #27272a !important; /* zinc-800 */
+	border-color: #27272a !important;
+	box-shadow: var(--shadow) !important;
+}
+
+.upsell-add-bundle-btn:disabled {
+	background-color: var(--muted) !important;
+	color: var(--muted-foreground) !important;
+	cursor: not-allowed !important;
+	border-color: var(--border) !important;
+	box-shadow: none !important;
+}
+
+.bundle-stock-notice {
+	font-size: 13px !important;
+	font-weight: 500 !important;
+	color: var(--destructive) !important;
+}
+
+/* ==========================================================================
+   4. POST-PURCHASE UPSELL STYLING (Thank You Page overlay modal)
+   ========================================================================== */
+.upsell-bundle-post-purchase-overlay {
+	position: fixed !important;
+	top: 0 !important;
+	left: 0 !important;
+	width: 100% !important;
+	height: 100% !important;
+	background: rgba(9, 9, 11, 0.8) !important; /* zinc-950 with 80% opacity */
+	backdrop-filter: blur(8px) !important;
+	z-index: 999999 !important;
+	display: flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	padding: 16px !important;
+	box-sizing: border-box !important;
+}
+
+.upsell-bundle-post-purchase-modal-content {
+	background: #ffffff !important;
+	width: 100% !important;
+	max-width: 520px !important;
+	border-radius: var(--radius-lg) !important;
+	overflow: hidden !important;
+	box-shadow: var(--shadow-lg) !important;
+	border: 1px solid var(--border) !important;
+	animation: upsellModalFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+	box-sizing: border-box !important;
+}
+
+@keyframes upsellModalFadeIn {
+	from {
+		opacity: 0;
+		transform: scale(0.97) translateY(8px);
+	}
+	to {
+		opacity: 1;
+		transform: scale(1) translateY(0);
+	}
+}
+
+.upsell-header-banner {
+	background: var(--muted) !important;
+	border-bottom: 1px solid var(--border) !important;
+	padding: 24px !important;
+	text-align: center !important;
+}
+
+.upsell-header-banner h2 {
+	color: var(--foreground) !important;
+	margin: 0 0 6px 0 !important;
+	font-size: 16px !important;
+	font-weight: 600 !important;
+	letter-spacing: -0.4px !important;
+	line-height: 1.4 !important;
+}
+
+.upsell-header-banner p {
+	margin: 0 !important;
+	font-size: 13px !important;
+	color: var(--muted-foreground) !important;
+	line-height: 1.4 !important;
+}
+
+.upsell-body {
+	display: flex !important;
+	padding: 24px !important;
+	gap: 20px !important;
+	border-bottom: 1px solid var(--border) !important;
+	align-items: flex-start !important;
+}
+
+.upsell-image-box {
+	width: 110px !important;
+	height: 110px !important;
+	flex-shrink: 0 !important;
+	border-radius: var(--radius) !important;
+	overflow: hidden !important;
+	border: 1px solid var(--border) !important;
+	background: #ffffff !important;
+}
+
+.upsell-image-box img {
+	width: 100% !important;
+	height: 100% !important;
+	object-fit: cover !important;
+}
+
+.upsell-info-box {
+	flex-grow: 1 !important;
+}
+
+.upsell-info-box h3 {
+	margin: 0 0 8px 0 !important;
+	font-size: 15px !important;
+	font-weight: 600 !important;
+	color: var(--foreground) !important;
+	line-height: 1.3 !important;
+}
+
+.upsell-price-box {
+	display: flex !important;
+	align-items: baseline !important;
+	gap: 8px !important;
+	margin-bottom: 10px !important;
+}
+
+.upsell-price-original {
+	text-decoration: line-through !important;
+	color: var(--muted-foreground) !important;
+	font-size: 13px !important;
+}
+
+.upsell-price-final {
+	font-size: 16px !important;
+	font-weight: 700 !important;
+	color: var(--destructive) !important;
+}
+
+.upsell-description {
+	margin: 0 !important;
+	font-size: 13px !important;
+	color: var(--muted-foreground) !important;
+	line-height: 1.5 !important;
+}
+
+.upsell-footer-actions {
+	padding: 20px 24px !important;
+	background: #ffffff !important;
+	display: flex !important;
+	flex-direction: column !important;
+	gap: 12px !important;
+	text-align: center !important;
+}
+
+.upsell-accept-btn {
+	width: 100% !important;
+	padding: 12px 24px !important;
+	font-size: 14px !important;
+	font-weight: 500 !important;
+	border-radius: var(--radius-sm) !important;
+	background-color: var(--success) !important;
+	border: 1px solid var(--success) !important;
+	color: #ffffff !important;
+	transition: all 0.15s ease-in-out !important;
+	box-shadow: var(--shadow-sm) !important;
+	cursor: pointer !important;
+}
+
+.upsell-accept-btn:hover {
+	background-color: #059669 !important;
+	border-color: #059669 !important;
+	box-shadow: var(--shadow) !important;
+}
+
+.upsell-decline-btn {
+	background: transparent !important;
+	border: none !important;
+	color: var(--muted-foreground) !important;
+	font-size: 13px !important;
+	font-weight: 400 !important;
+	text-decoration: none !important;
+	cursor: pointer !important;
+	padding: 4px 0 !important;
+	box-shadow: none !important;
+	transition: color 0.15s ease !important;
+}
+
+.upsell-decline-btn:hover {
+	color: var(--foreground) !important;
+	text-decoration: underline !important;
+}
+
+@media (max-width: 500px) {
+	.upsell-body {
+		flex-direction: column !important;
+		align-items: center !important;
+		text-align: center !important;
+		padding: 20px !important;
+	}
+	.upsell-image-box {
+		width: 100px !important;
+		height: 100px !important;
+	}
+	.upsell-price-box {
+		justify-content: center !important;
+	}
+}
+
+/* ==========================================================================
+   5. WOOCOMMERCE ALERTS AND NOTICES (Shadcn Alerts Style)
+   ========================================================================== */
+.woocommerce-NoticeGroup-checkout,
+.woocommerce-error,
+.woocommerce-message,
+.woocommerce-info {
+	border: 1px solid var(--border) !important;
+	border-radius: var(--radius-sm) !important;
+	padding: 12px 16px !important;
+	list-style: none !important;
+	margin: 0 0 20px 0 !important;
+	font-size: 13px !important;
+	line-height: 1.5 !important;
+	box-shadow: var(--shadow-sm) !important;
+}
+
+.woocommerce-error {
+	background-color: #fef2f2 !important; /* red-50 */
+	border-color: #fca5a5 !important; /* red-200 */
+	color: #991b1b !important; /* red-800 */
+}
+
+.woocommerce-message {
+	background-color: #ecfdf5 !important; /* emerald-50 */
+	border-color: #a7f3d0 !important; /* emerald-200 */
+	color: #065f46 !important; /* emerald-800 */
+}
+
+.woocommerce-info {
+	background-color: #f0f9ff !important; /* sky-50 */
+	border-color: #bae6fd !important; /* sky-200 */
+	color: #075985 !important; /* sky-800 */
+}
+
+.woocommerce-error li,
+.woocommerce-message li,
+.woocommerce-info li {
+	margin: 0 !important;
+	padding: 0 !important;
+}

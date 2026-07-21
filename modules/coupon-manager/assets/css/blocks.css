@@ -1,0 +1,75 @@
+/**
+ * WooCommerce Coupon Display Manager — Block Checkout Styles
+ *
+ * Reposition Mode: the native block coupon field is hidden via PHP inline styles.
+ * This file provides fallbacks and overrides for block-specific elements.
+ *
+ * @since 1.2.0
+ */
+
+/* ==========================================================================
+   1. Hide native block coupon UI (fallback)
+   ========================================================================== */
+.wc-block-components-totals-coupon,
+.wc-block-checkout__coupon-code,
+.wp-block-woocommerce-checkout-order-summary-coupon-block,
+.wc-block-components-totals-coupon-link,
+.wc-block-components-totals__coupon,
+[data-block-name="woocommerce/checkout-order-summary-coupon-block"] {
+	display: none !important;
+}
+
+/* ==========================================================================
+   2. Apply button presets (used on mock button in block checkout)
+   ========================================================================== */
+.wcdm-block-btn-secondary {
+	background      : #ffffff !important;
+	color           : #0f172a !important;
+	border          : 1px solid #cbd5e1 !important;
+	box-shadow      : 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+	transition      : all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+.wcdm-block-btn-secondary:hover {
+	background      : #f8fafc !important;
+	color           : #020617 !important;
+	border-color    : #94a3b8 !important;
+}
+
+.wcdm-block-btn-link {
+	background      : none !important;
+	border          : none !important;
+	color           : #4f46e5 !important;
+	text-decoration : none !important;
+	box-shadow      : none !important;
+	padding         : 0 8px !important;
+	transition      : all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+.wcdm-block-btn-link:hover {
+	color           : #3730a3 !important;
+	text-decoration : underline !important;
+}
+
+.wcdm-block-btn-custom {
+	background-color: var(--wcdm-btn-bg, #6c757d) !important;
+	color           : var(--wcdm-btn-color, #ffffff) !important;
+	border          : 1px solid var(--wcdm-btn-bg, #6c757d) !important;
+	transition      : all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+.wcdm-block-btn-custom:hover {
+	background-color: var(--wcdm-btn-hover-bg, #5a6268) !important;
+	border-color    : var(--wcdm-btn-hover-bg, #5a6268) !important;
+	color           : var(--wcdm-btn-hover-color, #ffffff) !important;
+}
+
+/* ==========================================================================
+   3. Applied coupon pill (block checkout page)
+   ========================================================================== */
+.wcdm-checkout-coupon-repositioned.wcdm-coupon-applied-state {
+	background      : #f0fdf4 !important;
+	border          : 1px solid #bbf7d0 !important;
+	border-radius   : 8px !important;
+	padding         : 12px 16px !important;
+	margin-bottom   : 12px;
+	box-shadow      : none !important;
+	transition      : all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
