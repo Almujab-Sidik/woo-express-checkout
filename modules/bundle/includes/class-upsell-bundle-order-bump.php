@@ -54,6 +54,23 @@ class Upsell_Bundle_Order_Bump {
 		return false;
 	}
 
+	private function get_bump_discount_percent( $main_product_id, $bump_product_id ) {
+		$bumps = get_post_meta( $main_product_id, '_upsell_bundle_bumps', true );
+
+		if ( ! is_array( $bumps ) ) {
+			return 0;
+		}
+
+		foreach ( $bumps as $bump ) {
+			if ( isset( $bump['product_id'] ) && absint( $bump['product_id'] ) === $bump_product_id ) {
+				$discount = isset( $bump['discount_percent'] ) ? (float) $bump['discount_percent'] : 0;
+				return min( 100, max( 0, $discount ) );
+			}
+		}
+
+		return 0;
+	}
+
 	public function render_order_bumps() {
 		if ( ! WC()->cart ) {
 			return;
@@ -111,6 +128,7 @@ class Upsell_Bundle_Order_Bump {
 						'title'           => $bump['title'],
 						'description'     => $bump['description'],
 						'price'           => $bump['price'],
+						'discount_percent' => isset( $bump['discount_percent'] ) ? (float) $bump['discount_percent'] : 0,
 					);
 				}
 			}
@@ -132,10 +150,9 @@ class Upsell_Bundle_Order_Bump {
 			$main_id = $bump['main_product_id'];
 			$bump_id = $bump['bump_product_id'];
 
-			// Order bump has no separate discount price — always sold at the
-			// product's own price.
-			$original_price = $bump_product->get_price();
-			$bump_price     = $original_price;
+			$original_price   = (float) $bump_product->get_price();
+			$discount_percent = min( 100, max( 0, (float) $bump['discount_percent'] ) );
+			$bump_price       = $original_price * ( 1 - ( $discount_percent / 100 ) );
 			$display_title  = ! empty( $bump['title'] ) ? $bump['title'] : $bump_product->get_title();
 
 			$checked = $this->is_bump_in_cart( $bump_id, $main_id );
@@ -189,12 +206,14 @@ class Upsell_Bundle_Order_Bump {
 				wp_send_json_error( array( 'message' => 'Produk tidak tersedia.' ) );
 			}
 
-			// Always added at the product's own price — there is no separate
-			// bump discount field.
+			$discount_percent = $this->get_bump_discount_percent( $main_id, $bump_id );
+			$bump_price       = (float) $bump_product->get_price() * ( 1 - ( $discount_percent / 100 ) );
+
 			$cart_item_data = array(
 				'is_order_bump'       => true,
 				'bump_main_product'   => $main_id,
-				'upsell_bump_price'   => floatval( $bump_product->get_price() ),
+				'upsell_bump_price'   => $bump_price,
+				'upsell_bump_discount' => $discount_percent,
 			);
 
 			WC()->cart->add_to_cart( $bump_id, 1, 0, array(), $cart_item_data );

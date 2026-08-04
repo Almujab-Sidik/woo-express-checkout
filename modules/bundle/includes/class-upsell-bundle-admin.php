@@ -196,8 +196,9 @@ class Upsell_Bundle_Admin {
 						<thead>
 							<tr>
 								<th style="width: 32%;"><?php esc_html_e( 'Pilih Produk Bump', 'upsell-bundle-woocommerce' ); ?></th>
-								<th style="width: 28%;"><?php esc_html_e( 'Override Judul (Opsional)', 'upsell-bundle-woocommerce' ); ?></th>
-								<th style="width: 34%;"><?php esc_html_e( 'Deskripsi Penawaran', 'upsell-bundle-woocommerce' ); ?></th>
+								<th style="width: 24%;"><?php esc_html_e( 'Override Judul (Opsional)', 'upsell-bundle-woocommerce' ); ?></th>
+								<th style="width: 26%;"><?php esc_html_e( 'Deskripsi Penawaran', 'upsell-bundle-woocommerce' ); ?></th>
+								<th style="width: 12%;"><?php esc_html_e( 'Diskon (%)', 'upsell-bundle-woocommerce' ); ?></th>
 								<th style="width: 6%; text-align: center;"></th>
 							</tr>
 						</thead>
@@ -206,6 +207,7 @@ class Upsell_Bundle_Admin {
 								$product_id  = isset( $bump['product_id'] ) ? absint( $bump['product_id'] ) : 0;
 								$title       = isset( $bump['title'] ) ? esc_attr( $bump['title'] ) : '';
 								$description = isset( $bump['description'] ) ? esc_textarea( $bump['description'] ) : '';
+								$discount    = isset( $bump['discount_percent'] ) ? (float) $bump['discount_percent'] : 0;
 								?>
 								<tr class="repeatable-row">
 									<td>
@@ -223,6 +225,9 @@ class Upsell_Bundle_Admin {
 									</td>
 									<td>
 										<textarea name="upsell_bump_description[]" rows="2" placeholder="<?php esc_attr_e( 'Dapatkan produk tambahan ini seharga...', 'upsell-bundle-woocommerce' ); ?>" style="width: 100%; height: 50px;"><?php echo $description; ?></textarea>
+									</td>
+									<td>
+										<input type="number" name="upsell_bump_discount[]" value="<?php echo esc_attr( $discount ); ?>" min="0" max="100" step="any" placeholder="0" style="width: 100%;" />
 									</td>
 									<td style="text-align: center; vertical-align: middle;">
 										<a href="#" class="button remove-row-btn">&times;</a>
@@ -373,6 +378,9 @@ class Upsell_Bundle_Admin {
 				<td>
 					<textarea name="upsell_bump_description[]" rows="2" placeholder="<?php esc_attr_e( 'Dapatkan produk tambahan ini seharga...', 'upsell-bundle-woocommerce' ); ?>" style="width: 100%; height: 50px;"></textarea>
 				</td>
+				<td>
+					<input type="number" name="upsell_bump_discount[]" value="" min="0" max="100" step="any" placeholder="0" style="width: 100%;" />
+				</td>
 				<td style="text-align: center; vertical-align: middle;">
 					<a href="#" class="button remove-row-btn">&times;</a>
 				</td>
@@ -409,15 +417,20 @@ class Upsell_Bundle_Admin {
 			$product_ids  = $_POST['upsell_bump_product_id'];
 			$titles       = isset( $_POST['upsell_bump_title'] ) ? $_POST['upsell_bump_title'] : array();
 			$descriptions = isset( $_POST['upsell_bump_description'] ) ? $_POST['upsell_bump_description'] : array();
+			$discounts    = isset( $_POST['upsell_bump_discount'] ) ? $_POST['upsell_bump_discount'] : array();
 
 			for ( $i = 0; $i < count( $product_ids ); $i++ ) {
 				$pid = absint( $product_ids[ $i ] );
 				if ( $pid > 0 ) {
+					$discount = isset( $discounts[ $i ] ) ? (float) wc_format_decimal( wp_unslash( $discounts[ $i ] ) ) : 0;
+					$discount = min( 100, max( 0, $discount ) );
+
 					$bumps[] = array(
 						'product_id'  => $pid,
 						'title'       => sanitize_text_field( $titles[ $i ] ),
 						'description' => sanitize_textarea_field( $descriptions[ $i ] ),
-						'price'       => '', // order bump has no separate price; sold at product's own price
+						'discount_percent' => $discount,
+						'price'       => '',
 					);
 				}
 			}
