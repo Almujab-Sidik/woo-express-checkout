@@ -7,11 +7,10 @@ if (! defined('ABSPATH')) {
 }
 
 /**
- * Halaman checkout khusus per produk — CPT + field SCF "Produk".
+ * Product-specific checkout pages using a custom post type and an SCF product field.
  *
- * Tiap post = 1 URL checkout yang otomatis mengisi cart dengan 1 produk
- * tertentu, menggantikan pola "1 funnel = 1 checkout" milik CartFlows.
- * URL post ini yang ditempel ke tombol CTA di landing page.
+ * Each post provides a dedicated checkout URL that adds one configured
+ * product to the cart for use with landing-page calls to action.
  */
 class Product_Checkout
 {
@@ -20,9 +19,8 @@ class Product_Checkout
 
     public function __construct()
     {
-        // Selalu daftarkan CPT supaya data/permalink lama tidak hilang saat
-        // toggle sempat dimatikan, tapi hook cart/template hanya aktif
-        // jika fitur diaktifkan.
+        // Always register the post type so existing content and permalinks are
+        // preserved when the feature is temporarily disabled.
         add_action('init', array($this, 'register_post_type'));
 
         if ('yes' !== get_option('wec_checkout_product_pages_enabled', 'no')) {
@@ -42,8 +40,8 @@ class Product_Checkout
             'labels' => array(
                 'name'          => __('Checkout', 'woo-express-checkout'),
                 'singular_name' => __('Checkout', 'woo-express-checkout'),
-                'add_new_item'  => __('Tambah Halaman Checkout', 'woo-express-checkout'),
-                'edit_item'     => __('Edit Halaman Checkout', 'woo-express-checkout'),
+                'add_new_item'  => __('Add Checkout Page', 'woo-express-checkout'),
+                'edit_item'     => __('Edit Checkout Page', 'woo-express-checkout'),
                 'all_items'     => __('Checkout', 'woo-express-checkout'),
             ),
             'public'       => true,
@@ -58,11 +56,8 @@ class Product_Checkout
     }
 
     /**
-     * Supaya klien bisa desain halamannya sendiri pakai Elementor (Elementor
-     * Pro sudah punya modul Dynamic Tags ACF yang otomatis kompatibel dengan
-     * SCF — deteksinya berbasis fungsi acf_get_field_groups(), bukan nama
-     * plugin). Dipanggil langsung (bukan lewat option) supaya tidak
-     * tergantung urutan hook 'init' antara plugin ini dan Elementor.
+     * Enable Elementor support when Elementor is available. Elementor Pro's
+     * ACF Dynamic Tags support is detected through the ACF API.
      */
     private function maybe_enable_elementor_support()
     {
@@ -72,11 +67,8 @@ class Product_Checkout
 
         add_post_type_support(self::POST_TYPE, 'elementor');
 
-        // Default harus sama persis dengan default Elementor sendiri
-        // (Plugin::ELEMENTOR_DEFAULT_POST_TYPES = ['page','post']) — kalau
-        // option ini belum pernah disimpan (situs yang belum pernah buka
-        // Elementor > Settings > Post Types), pakai array kosong di sini
-        // akan diam-diam MENGHAPUS dukungan Elementor dari Page & Post.
+        // Preserve Elementor's default supported post types when the option
+        // has not been saved yet.
         $default   = defined('\Elementor\Plugin::ELEMENTOR_DEFAULT_POST_TYPES')
             ? \Elementor\Plugin::ELEMENTOR_DEFAULT_POST_TYPES
             : array('page', 'post');
@@ -91,13 +83,9 @@ class Product_Checkout
     }
 
     /**
-     * Field "Produk" ini yang jadi satu-satunya ketergantungan kode (nama
-     * field harus persis `wec_checkout_product`, tipe Post Object dibatasi
-     * ke post type `product`) — didaftarkan lewat kode supaya selalu ada
-     * begitu SCF/ACF aktif, tanpa setup manual. Field lain di luar ini bebas
-     * dibuat manual oleh klien lewat menu Custom Fields seperti biasa untuk
-     * kebutuhan konten (judul promo, badge, testimoni, dst.), lalu ditarik
-     * ke desain Elementor via Dynamic Tags.
+     * The required product field is registered automatically when SCF or ACF
+     * is available. Additional custom fields can be created independently for
+     * page content and exposed through Elementor Dynamic Tags.
      */
     public function register_fields()
     {
@@ -107,14 +95,14 @@ class Product_Checkout
 
         acf_add_local_field_group(array(
             'key'    => 'group_wec_checkout_produk',
-            'title'  => __('Pengaturan Checkout Produk', 'woo-express-checkout'),
+            'title'  => __('Product Checkout Settings', 'woo-express-checkout'),
             'fields' => array(
                 array(
                     'key'           => 'field_wec_checkout_product',
-                    'label'         => __('Produk', 'woo-express-checkout'),
+                    'label'         => __('Product', 'woo-express-checkout'),
                     'name'          => self::FIELD_PRODUCT,
                     'type'          => 'post_object',
-                    'instructions'  => __('Produk ini otomatis masuk cart saat halaman dibuka. Cart pelanggan akan dikosongkan dulu jika sebelumnya berisi produk lain.', 'woo-express-checkout'),
+                    'instructions'  => __('This product is added to the cart when the page loads. Existing cart contents are cleared first when they contain a different product.', 'woo-express-checkout'),
                     'required'      => 1,
                     'post_type'     => array('product'),
                     'return_format' => 'id',
@@ -147,9 +135,8 @@ class Product_Checkout
             return $template;
         }
 
-        // Halaman yang sudah didesain pakai Elementor dibiarkan dirender oleh
-        // Elementor apa adanya — klien bebas custom, tinggal taruh widget
-        // Shortcode berisi [woocommerce_checkout] di posisi yang diinginkan.
+        // Let Elementor render pages built with Elementor so the checkout
+        // shortcode can be placed wherever the page design requires.
         if ('builder' === get_post_meta(get_the_ID(), '_elementor_edit_mode', true)) {
             return $template;
         }
@@ -180,10 +167,8 @@ class Product_Checkout
 
         $cart = WC()->cart;
 
-        // Jangan reset cart kalau produk utamanya sudah persis produk ini
-        // (mis. customer sekadar refresh halaman) — supaya order bump yang
-        // sudah dicentang tidak ikut hilang. Item order bump diabaikan dari
-        // perbandingan karena itu bukan "produk utama".
+        // Preserve the cart when it already contains only this main product,
+        // so refreshing the page does not remove selected order bumps.
         $needs_reset = true;
         if (! $cart->is_empty()) {
             $main_product_ids = array();
@@ -214,8 +199,8 @@ class Product_Checkout
             if ($variation_id) {
                 $cart->add_to_cart($product_id, 1, $variation_id, $default_attributes);
             }
-            // Produk variable tanpa varian default: sengaja dibiarkan, tidak
-            // ada cara aman menebak varian yang benar.
+            // Leave variable products without a default variation unchanged;
+            // selecting a variation automatically would be unsafe.
             return;
         }
 
@@ -231,16 +216,15 @@ class Product_Checkout
         printf(
             '<div class="notice notice-warning"><p>%s</p></div>',
             wp_kses(
-                __('Fitur <strong>Checkout per Produk</strong> aktif, tapi plugin <strong>Secure Custom Fields</strong> (atau ACF) belum terpasang/aktif — field "Produk" tidak akan muncul di halaman Checkout Produk.', 'woo-express-checkout'),
+                __('<strong>Product-Specific Checkout</strong> is enabled, but <strong>Secure Custom Fields</strong> (or ACF) is not active. The "Product" field will not appear on Product Checkout pages.', 'woo-express-checkout'),
                 array('strong' => array())
             )
         );
     }
 
     /**
-     * Simpan slug yang sedang dipakai (bukan cuma flag boolean) — supaya
-     * kalau slug-nya diganti lagi di kode nanti, flush otomatis jalan lagi
-     * dengan sendirinya tanpa perlu reset manual.
+     * Store the active rewrite slug so rewrite rules are refreshed automatically
+     * when the slug changes.
      */
     private function maybe_flush_rewrite_rules()
     {

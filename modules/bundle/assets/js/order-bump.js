@@ -1,5 +1,5 @@
 jQuery(document).ready(function($) {
-	// Listen to Order Bump checkbox toggle
+	// Handle order bump checkbox changes.
 	$(document).on('change', '.upsell-bump-checkbox', function() {
 		var $checkbox = $(this);
 		var $card = $checkbox.closest('.upsell-bundle-bump-card');
@@ -7,11 +7,11 @@ jQuery(document).ready(function($) {
 		var bumpId = $checkbox.data('bump-id');
 		var checked = $checkbox.is(':checked');
 		
-		// Visual feedback
+		// Show a loading state while the request is processed.
 		$card.addClass('bump-loading');
 		$checkbox.prop('disabled', true);
 
-		// Send AJAX request
+		// Persist the selection through AJAX.
 		$.ajax({
 			url: upsellBundleBump.ajax_url,
 			type: 'POST',
@@ -33,24 +33,24 @@ jQuery(document).ready(function($) {
 						$card.removeClass('bump-checked');
 					}
 					
-					// Tell WooCommerce to update checkout fragments and totals
+					// Refresh WooCommerce checkout fragments and totals.
 					$(document.body).trigger('update_checkout');
 				} else {
-					// Revert checkbox state on failure
+					// Restore the previous checkbox state when the request fails.
 					$checkbox.prop('checked', !checked);
 					if (!checked) {
 						$card.addClass('bump-checked');
 					} else {
 						$card.removeClass('bump-checked');
 					}
-					alert('Gagal memperbarui pesanan. Silakan coba lagi.');
+					alert('Unable to update the order. Please try again.');
 				}
 			},
 			error: function() {
 				$card.removeClass('bump-loading');
 				$checkbox.prop('disabled', false);
 				$checkbox.prop('checked', !checked);
-				alert('Terjadi kesalahan koneksi.');
+				alert('A connection error occurred.');
 			}
 		});
 	});

@@ -38,9 +38,7 @@ class Plugin
     }
 
     /**
-     * Modul bundle & coupon-manager sengaja tetap pakai nama class asli
-     * (global, tanpa namespace WEC\) — kodenya dipindah verbatim dari
-     * plugin asal, nol perubahan logika.
+     * Load the bundled modules using their original global class names.
      */
     private function init_modules()
     {
@@ -62,8 +60,8 @@ class Plugin
             \Upsell_Bundle_Product_Bundle::get_instance();
             \Upsell_Bundle_Post_Purchase::get_instance();
 
-            // Settingnya sekarang inline di halaman Express Checkout terpadu,
-            // jadi submenu WooCommerce aslinya disembunyikan.
+            // Settings are embedded in the unified Express Checkout page, so
+            // the module's original submenu is hidden.
             remove_action('admin_menu', array(\Upsell_Bundle_Admin::get_instance(), 'add_admin_menu'));
         }
 
@@ -77,7 +75,7 @@ class Plugin
             if (is_admin()) {
                 \WCDM_Settings::get_instance();
 
-                // Same reason as the bundle module above.
+                // Keep the settings available only on the unified settings page.
                 remove_action('admin_menu', array(\WCDM_Settings::get_instance(), 'add_admin_menu'));
                 remove_filter('woocommerce_settings_tabs_array', array(\WCDM_Settings::get_instance(), 'add_settings_tab'), 50);
             }
@@ -91,8 +89,7 @@ class Plugin
     }
 
     /**
-     * Nama constant dipertahankan sama seperti plugin asal (upsell-bundle-woocommerce)
-     * supaya kode di modules/bundle tidak perlu diubah.
+     * Preserve the original constants expected by the bundled module.
      */
     private function define_bundle_constants()
     {
@@ -104,8 +101,7 @@ class Plugin
     }
 
     /**
-     * Nama constant dipertahankan sama seperti plugin asal (woo-coupon-manager-main)
-     * supaya kode di modules/coupon-manager tidak perlu diubah.
+     * Preserve the original constants expected by the bundled coupon module.
      */
     private function define_coupon_constants()
     {
@@ -148,9 +144,8 @@ class Plugin
     }
 
     /**
-     * Di plugin asalnya, frontend.css milik modul bundle di-load lewat fungsi
-     * global terpisah (bukan lewat salah satu class yang dipindahkan), jadi
-     * perlu di-enqueue eksplisit di sini — sitewide, sama seperti aslinya.
+     * The bundle frontend stylesheet is loaded explicitly because the bundled
+     * module does not enqueue it through a module class.
      */
     public function enqueue_bundle_frontend_assets()
     {
@@ -197,7 +192,7 @@ class Plugin
                 <strong><?php esc_html_e('WooCommerce Express Checkout', 'woo-express-checkout'); ?></strong> &mdash;
                 <?php
                 echo wp_kses(
-                    __('Plugin ini bekerja optimal dengan shortcode checkout klasik. Halaman checkout Anda saat ini menggunakan <strong>Checkout Block</strong>. Untuk pengalaman penuh, ganti blok tersebut dengan shortcode <code>[woocommerce_checkout]</code>.', 'woo-express-checkout'),
+                    __('This plugin works best with the classic checkout shortcode. The current checkout page uses the <strong>Checkout Block</strong>. For full compatibility, replace it with the <code>[woocommerce_checkout]</code> shortcode.', 'woo-express-checkout'),
                     array('strong' => array(), 'code' => array())
                 );
                 ?>

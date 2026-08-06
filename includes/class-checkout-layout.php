@@ -1,7 +1,8 @@
 <?php
 
 /**
- * F1 — Layout checkout 2 kolom Shopify-style (kiri: form+payment, kanan: order summary).
+ * Checkout layout with the customer form and payment on the left and the
+ * order summary on the right.
  *
  * @package WEC
  */
@@ -19,8 +20,8 @@ class Checkout_Layout
         add_filter('woocommerce_locate_template', array($this, 'override_template'), 10, 3);
         add_action('init', array($this, 'reposition_coupon'));
 
-        // Ganti heading "Billing details" bawaan WooCommerce agar sesuai
-        // alur Shopify-style (Kontak -> Pembayaran), bukan istilah invoicing.
+        // Replace WooCommerce's default billing heading with a customer-facing
+        // heading that matches the streamlined checkout flow.
         add_filter('gettext', array($this, 'translate_billing_heading'), 10, 3);
     }
 
@@ -33,8 +34,8 @@ class Checkout_Layout
         $needs_shipping = function_exists('WC') && WC()->cart ? WC()->cart->needs_shipping() : false;
 
         return $needs_shipping
-            ? __('Kontak & Alamat Pengiriman', 'woo-express-checkout')
-            : __('Kontak', 'woo-express-checkout');
+            ? __('Contact & Shipping Address', 'woo-express-checkout')
+            : __('Contact', 'woo-express-checkout');
     }
 
     public function override_template($template, $template_name, $template_path)
@@ -56,8 +57,7 @@ class Checkout_Layout
     }
 
     /**
-     * Kupon di-render di dalam order summary (kolom kanan), bukan di posisi
-     * default WooCommerce di atas form.
+     * Remove WooCommerce's native coupon form from its default position.
      */
     public function reposition_coupon()
     {

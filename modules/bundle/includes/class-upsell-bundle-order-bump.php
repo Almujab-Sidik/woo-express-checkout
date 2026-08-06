@@ -100,23 +100,17 @@ class Upsell_Bundle_Order_Bump {
 						continue;
 					}
 
-					// Checked here (not just in the render loop below) so a cart
-					// whose only bump is invalid never prints an empty "Penawaran
-					// Spesial" heading with no offers under it. Trashed products
-					// still report in_stock=true, so status is checked too.
+					// Validate each configured product before rendering the offer group.
 					$bump_product = wc_get_product( $bump_pid );
 					if ( ! $bump_product || 'publish' !== $bump_product->get_status() || ! $bump_product->is_in_stock() ) {
 						continue;
 					}
 
-					// Intentionally shown even if the bump product is already in
-					// the cart (e.g. it's also part of an added bundle) — the bump
-					// should always be offered while the section is enabled.
+					// Keep the offer visible even when the product is already present in
+					// the cart, for example as part of another bundle.
 
-					// Dedup by bump product alone, not per-trigger: if two
-					// different trigger products both offer the same bump product,
-					// show it once — otherwise a customer could tick both cards
-					// and add the same product to the cart twice.
+					// Deduplicate by bump product so the same product is not offered
+					// multiple times when triggered by different cart items.
 					if ( in_array( $bump_pid, $rendered_bump_pids, true ) ) {
 						continue;
 					}
@@ -139,7 +133,7 @@ class Upsell_Bundle_Order_Bump {
 		}
 
 		echo '<div class="upsell-bundle-checkout-bumps">';
-		echo '<h4>' . esc_html__( 'Penawaran Spesial Untuk Anda!', 'upsell-bundle-woocommerce' ) . '</h4>';
+		echo '<h4>' . esc_html__( 'Special Offer', 'upsell-bundle-woocommerce' ) . '</h4>';
 
 		foreach ( $bumps_to_render as $bump ) {
 			$bump_product = wc_get_product( $bump['bump_product_id'] );
@@ -205,7 +199,7 @@ class Upsell_Bundle_Order_Bump {
 		if ( $checked ) {
 			$bump_product = wc_get_product( $bump_id );
 			if ( ! $bump_product || 'publish' !== $bump_product->get_status() || ! $bump_product->is_in_stock() ) {
-				wp_send_json_error( array( 'message' => 'Produk tidak tersedia.' ) );
+				wp_send_json_error( array( 'message' => 'The selected product is unavailable.' ) );
 			}
 
 			$discount_percent = $this->get_bump_discount_percent( $main_id, $bump_id );

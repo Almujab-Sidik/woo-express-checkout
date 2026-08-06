@@ -103,8 +103,8 @@ class Upsell_Bundle_Post_Purchase {
 		<div class="upsell-bundle-post-purchase-overlay" id="upsell-post-purchase-modal">
 			<div class="upsell-bundle-post-purchase-modal-content">
 				<div class="upsell-header-banner">
-					<h2><?php esc_html_e( 'TUNGGU! ADA PENAWARAN SPESIAL UNTUK ANDA', 'upsell-bundle-woocommerce' ); ?></h2>
-					<p><?php esc_html_e( 'Tambahkan produk ini ke pesanan Anda dengan harga diskon khusus!', 'upsell-bundle-woocommerce' ); ?></p>
+					<h2><?php esc_html_e( 'Wait! We Have a Special Offer for You', 'upsell-bundle-woocommerce' ); ?></h2>
+					<p><?php esc_html_e( 'Add this product to your order at a special price.', 'upsell-bundle-woocommerce' ); ?></p>
 				</div>
 
 				<div class="upsell-body">
@@ -128,10 +128,10 @@ class Upsell_Bundle_Post_Purchase {
 							data-parent-order-id="<?php echo esc_attr( $order_id ); ?>"
 							data-upsell-product-id="<?php echo esc_attr( $upsell_id ); ?>"
 							data-main-id="<?php echo esc_attr( $found_main_product_id ); ?>">
-						<?php esc_html_e( 'Ya, Tambahkan ke Pesanan Saya!', 'upsell-bundle-woocommerce' ); ?>
+						<?php esc_html_e( 'Yes, Add It to My Order', 'upsell-bundle-woocommerce' ); ?>
 					</button>
 					<button class="button upsell-decline-btn" id="upsell-decline-trigger">
-						<?php esc_html_e( 'Tidak, terima kasih. Lewati penawaran ini.', 'upsell-bundle-woocommerce' ); ?>
+						<?php esc_html_e( 'No, Thanks. Skip This Offer', 'upsell-bundle-woocommerce' ); ?>
 					</button>
 				</div>
 			</div>
@@ -190,7 +190,7 @@ class Upsell_Bundle_Post_Purchase {
 				}
 			}
 
-			// Copy checkout info from the parent order.
+			// Copy customer and address details from the parent order.
 			$new_order->set_billing_first_name( $parent_order->get_billing_first_name() );
 			$new_order->set_billing_last_name( $parent_order->get_billing_last_name() );
 			$new_order->set_billing_company( $parent_order->get_billing_company() );

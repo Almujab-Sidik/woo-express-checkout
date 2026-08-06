@@ -7,7 +7,7 @@
 	'use strict';
 
 	/* ---------- Mobile accordion toggle ---------- *
-	 * Vanilla JS — tidak butuh jQuery.
+	 * Uses vanilla JavaScript and does not require jQuery.
 	 */
 	function initAccordion() {
 		var toggle = document.getElementById( 'wec-summary-toggle' );
@@ -35,9 +35,9 @@
 	}
 
 	/* ---------- Coupon AJAX apply ---------- *
-	 * Memakai jQuery (sudah di-load oleh WC checkout) + wc_checkout_params.
-	 * Event delegation dipakai agar handler tetap berfungsi setelah
-	 * fragment AJAX mengganti elemen (tanpa handler duplikat).
+	 * Uses jQuery, which is loaded by WooCommerce checkout, and wc_checkout_params.
+	 * Event delegation keeps the handler working after AJAX fragments replace
+	 * the coupon elements without creating duplicate handlers.
 	 */
 	function initCoupon() {
 		if ( typeof jQuery === 'undefined' || typeof wc_checkout_params === 'undefined' ) {
@@ -46,7 +46,7 @@
 
 		var $ = jQuery;
 
-		// Tombol "Pakai" — event delegation (sekali bind, selalu jalan).
+		// Apply button using delegated event handling.
 		$( document ).on( 'click', '.wec-coupon-btn', function ( e ) {
 			e.preventDefault();
 			var field = $( this ).closest( '.wec-coupon-field' );
@@ -54,7 +54,7 @@
 			applyCoupon( $, input, field );
 		} );
 
-		// Enter key pada input kupon.
+		// Apply the coupon when the customer presses Enter.
 		$( document ).on( 'keydown', '.wec-coupon-input', function ( e ) {
 			if ( e.key === 'Enter' || e.keyCode === 13 ) {
 				e.preventDefault();
@@ -92,7 +92,7 @@
 			success: function ( response ) {
 				$field.removeClass( 'processing' );
 
-				// Bersihkan notice lama di semua field kupon.
+				// Clear previous notices from all coupon fields.
 				$( '.wec-coupon-msg' ).empty();
 
 				if ( response ) {
@@ -100,14 +100,14 @@
 						response.indexOf( 'woocommerce-error' ) !== -1 ||
 						response.indexOf( 'is-error' ) !== -1
 					) {
-						// Error — tampilkan pesan di field ini.
+						// Display the error in the current coupon field.
 						$msg.html( response );
 					} else {
-						// Sukses — bersihkan semua input kupon & tampilkan konfirmasi.
+						// Clear coupon inputs and display the confirmation message.
 						$( '.wec-coupon-input' ).val( '' );
 						$msg.html( response );
 
-						// Trigger WC update_checkout untuk refresh order summary.
+						// Refresh the WooCommerce order summary and checkout totals.
 						$( document.body ).trigger( 'applied_coupon_in_checkout', [ code ] );
 						$( document.body ).trigger( 'update_checkout', {
 							update_shipping_method: false

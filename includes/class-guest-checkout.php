@@ -1,6 +1,6 @@
 <?php
 /**
- * F2 — Guest Checkout Tanpa Form Login & Field Minimal.
+ * Guest checkout with a minimal customer information form.
  *
  * @package WEC
  */
@@ -34,7 +34,7 @@ class Guest_Checkout {
 	}
 
 	/**
-	 * Signup dinonaktifkan karena akun dibuat otomatis oleh F4 (Auto_Account).
+	 * Account registration is handled automatically after successful payment.
 	 *
 	 * @return string
 	 */
@@ -50,8 +50,8 @@ class Guest_Checkout {
 	}
 
 	/**
-	 * Sederhanakan field billing menjadi: Email, Nama Lengkap, No. HP.
-	 * Field alamat disembunyikan ketika cart tidak butuh shipping (produk digital).
+	 * Reduce billing fields to email, full name, and phone number.
+	 * Address fields are hidden when the cart does not require shipping.
 	 *
 	 * @param array $fields Field checkout.
 	 * @return array
@@ -80,23 +80,23 @@ class Guest_Checkout {
 		if ( isset( $fields['billing']['billing_email'] ) ) {
 			$fields['billing']['billing_email']['priority'] = 10;
 			$fields['billing']['billing_email']['class']    = array( 'form-row-wide' );
-			// Sudah login → email ter-prefill dari akun, jangan biarkan diubah.
+			// Keep the account email read-only for logged-in customers.
 			if ( is_user_logged_in() ) {
 				$fields['billing']['billing_email']['custom_attributes'] = array( 'readonly' => 'readonly' );
 			}
 		}
 
-		// billing_first_name dipakai sebagai satu-satunya field nama (nama lengkap).
+		// Use billing_first_name as the full-name field.
 		if ( isset( $fields['billing']['billing_first_name'] ) ) {
-			$fields['billing']['billing_first_name']['label']       = __( 'Nama Lengkap', 'woo-express-checkout' );
-			$fields['billing']['billing_first_name']['placeholder'] = __( 'Nama Lengkap', 'woo-express-checkout' );
+			$fields['billing']['billing_first_name']['label']       = __( 'Full Name', 'woo-express-checkout' );
+			$fields['billing']['billing_first_name']['placeholder'] = __( 'Full Name', 'woo-express-checkout' );
 			$fields['billing']['billing_first_name']['priority']    = 20;
 			$fields['billing']['billing_first_name']['class']       = array( 'form-row-wide' );
 		}
 
 		if ( isset( $fields['billing']['billing_phone'] ) ) {
-			$fields['billing']['billing_phone']['label']       = __( 'No. HP', 'woo-express-checkout' );
-			$fields['billing']['billing_phone']['placeholder'] = __( '08xxx atau +62xxx', 'woo-express-checkout' );
+			$fields['billing']['billing_phone']['label']       = __( 'Phone Number', 'woo-express-checkout' );
+			$fields['billing']['billing_phone']['placeholder'] = __( '08xxx or +62xxx', 'woo-express-checkout' );
 			$fields['billing']['billing_phone']['priority']    = 30;
 			$fields['billing']['billing_phone']['class']       = array( 'form-row-wide' );
 			$fields['billing']['billing_phone']['required']    = true;
@@ -110,8 +110,8 @@ class Guest_Checkout {
 	}
 
 	/**
-	 * Default value untuk field alamat yang disembunyikan, supaya order tetap
-	 * valid meski field-nya tidak ditampilkan (mencegah error validasi).
+	 * Provide defaults for hidden address fields so orders remain valid without
+	 * triggering validation errors.
 	 *
 	 * @param mixed  $value Nilai saat ini.
 	 * @param string $input Nama field.
@@ -127,7 +127,7 @@ class Guest_Checkout {
 			'billing_state'     => '',
 			'billing_city'      => '',
 			'billing_postcode'  => '',
-			'billing_address_1' => __( 'Produk Digital', 'woo-express-checkout' ),
+			'billing_address_1' => __( 'Digital Product', 'woo-express-checkout' ),
 			'billing_last_name' => '',
 		);
 
@@ -135,7 +135,7 @@ class Guest_Checkout {
 	}
 
 	/**
-	 * Format: 08xxx atau +62xxx/62xxx, minimal 9 digit.
+	 * Accepted formats: 08xxx, +62xxx, or 62xxx with at least 9 digits.
 	 *
 	 * @param array    $data   Data checkout.
 	 * @param \WP_Error $errors Error handler.
@@ -146,7 +146,7 @@ class Guest_Checkout {
 		if ( ! $this->is_valid_phone( $phone ) ) {
 			$errors->add(
 				'validation',
-				__( 'Nomor HP tidak valid. Gunakan format 08xxx atau +62xxx (min. 9 digit).', 'woo-express-checkout' )
+				__( 'Please enter a valid phone number using the format 08xxx or +62xxx (at least 9 digits).', 'woo-express-checkout' )
 			);
 		}
 	}

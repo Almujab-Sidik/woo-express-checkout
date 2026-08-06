@@ -195,9 +195,9 @@ class Upsell_Bundle_Admin {
 					<table class="upsell-bundle-repeatable-table" id="order-bump-table">
 						<thead>
 							<tr>
-								<th style="width: 32%;"><?php esc_html_e( 'Pilih Produk Bump', 'upsell-bundle-woocommerce' ); ?></th>
+								<th style="width: 32%;"><?php esc_html_e( 'Select Bump Product', 'upsell-bundle-woocommerce' ); ?></th>
 								<th style="width: 24%;"><?php esc_html_e( 'Override Judul (Opsional)', 'upsell-bundle-woocommerce' ); ?></th>
-								<th style="width: 26%;"><?php esc_html_e( 'Deskripsi Penawaran', 'upsell-bundle-woocommerce' ); ?></th>
+								<th style="width: 26%;"><?php esc_html_e( 'Offer Description', 'upsell-bundle-woocommerce' ); ?></th>
 								<th style="width: 12%;"><?php esc_html_e( 'Diskon (%)', 'upsell-bundle-woocommerce' ); ?></th>
 								<th style="width: 6%; text-align: center;"></th>
 							</tr>
@@ -211,7 +211,7 @@ class Upsell_Bundle_Admin {
 								?>
 								<tr class="repeatable-row">
 									<td>
-										<select class="wc-product-search" name="upsell_bump_product_id[]" data-placeholder="<?php esc_attr_e( 'Cari produk...', 'woocommerce' ); ?>" data-action="woocommerce_json_search_products_and_variations" style="width: 100%;">
+										<select class="wc-product-search" name="upsell_bump_product_id[]" data-placeholder="<?php esc_attr_e( 'Search products...', 'woocommerce' ); ?>" data-action="woocommerce_json_search_products_and_variations" style="width: 100%;">
 											<?php if ( $product_id ) : 
 												$prod = wc_get_product( $product_id );
 												if ( $prod && 'publish' === $prod->get_status() ) : ?>
@@ -221,10 +221,10 @@ class Upsell_Bundle_Admin {
 										</select>
 									</td>
 									<td>
-										<input type="text" name="upsell_bump_title[]" value="<?php echo $title; ?>" placeholder="<?php esc_attr_e( 'Nama produk default', 'upsell-bundle-woocommerce' ); ?>" style="width: 100%;" />
+										<input type="text" name="upsell_bump_title[]" value="<?php echo $title; ?>" placeholder="<?php esc_attr_e( 'Default product name', 'upsell-bundle-woocommerce' ); ?>" style="width: 100%;" />
 									</td>
 									<td>
-										<textarea name="upsell_bump_description[]" rows="2" placeholder="<?php esc_attr_e( 'Dapatkan produk tambahan ini seharga...', 'upsell-bundle-woocommerce' ); ?>" style="width: 100%; height: 50px;"><?php echo $description; ?></textarea>
+										<textarea name="upsell_bump_description[]" rows="2" placeholder="<?php esc_attr_e( 'Add a short offer description...', 'upsell-bundle-woocommerce' ); ?>" style="width: 100%; height: 50px;"><?php echo $description; ?></textarea>
 									</td>
 									<td>
 										<input type="number" name="upsell_bump_discount[]" value="<?php echo esc_attr( $discount ); ?>" min="0" max="100" step="any" placeholder="0" style="width: 100%;" />
@@ -245,7 +245,7 @@ class Upsell_Bundle_Admin {
 			<!-- 2. BUNDLE SUBSECTION -->
 			<div class="upsell-bundle-section">
 				<div class="upsell-bundle-section-header">
-					<h3><?php esc_html_e( '2. Bundle Produk (Halaman Produk & Upgrade Checkout)', 'upsell-bundle-woocommerce' ); ?></h3>
+					<h3><?php esc_html_e( '2. Product Bundle (Product Page & Checkout Upgrade)', 'upsell-bundle-woocommerce' ); ?></h3>
 					<span class="section-toggle">
 						<label class="switch switch-sm">
 							<input type="checkbox" name="_upsell_bundle_bundle_enabled" value="yes" <?php checked( $bundle_enabled, 'yes' ); ?> class="section-enable-toggle" />
@@ -256,8 +256,8 @@ class Upsell_Bundle_Admin {
 				<div class="upsell-bundle-section-content <?php echo ( 'yes' === $bundle_enabled ) ? '' : 'disabled-content'; ?>">
 					<div class="bundle-settings-group">
 						<p class="form-field">
-							<label><?php esc_html_e( 'Produk Tambahan dalam Bundle', 'upsell-bundle-woocommerce' ); ?></label>
-							<select class="wc-product-search upsell-bundle-input-select" multiple="multiple" name="_upsell_bundle_bundle_products[]" data-placeholder="<?php esc_attr_e( 'Cari produk lain untuk digabungkan...', 'woocommerce' ); ?>" data-action="woocommerce_json_search_products_and_variations">
+							<label><?php esc_html_e( 'Additional Bundle Products', 'upsell-bundle-woocommerce' ); ?></label>
+							<select class="wc-product-search upsell-bundle-input-select" multiple="multiple" name="_upsell_bundle_bundle_products[]" data-placeholder="<?php esc_attr_e( 'Search for products to include...', 'woocommerce' ); ?>" data-action="woocommerce_json_search_products_and_variations">
 								<?php
 								foreach ( $bundle_product_ids as $prod_id ) {
 									$prod = wc_get_product( $prod_id );
@@ -269,26 +269,26 @@ class Upsell_Bundle_Admin {
 								}
 								?>
 							</select>
-							<span class="description"><?php esc_html_e( 'Pilih satu atau lebih produk lain untuk digabungkan dengan produk utama ini.', 'upsell-bundle-woocommerce' ); ?></span>
+							<span class="description"><?php esc_html_e( 'Select one or more products to combine with the main product.', 'upsell-bundle-woocommerce' ); ?></span>
 						</p>
 
 						<p class="form-field upsell-bundle-checkbox-field">
 							<label for="_upsell_bundle_bundle_checkout_upgrade">
 								<input type="checkbox" id="_upsell_bundle_bundle_checkout_upgrade" name="_upsell_bundle_bundle_checkout_upgrade" value="yes" <?php checked( $bundle_checkout_upgrade, 'yes' ); ?> />
-								<?php esc_html_e( 'Tampilkan upgrade bundle ini di halaman checkout', 'upsell-bundle-woocommerce' ); ?>
+								<?php esc_html_e( 'Display this bundle upgrade on the checkout page', 'upsell-bundle-woocommerce' ); ?>
 							</label>
-							<span class="description"><?php esc_html_e( 'Tawarkan pembeli untuk meng-upgrade produk ini ke Paket Bundle di halaman checkout.', 'upsell-bundle-woocommerce' ); ?></span>
+							<span class="description"><?php esc_html_e( 'Allow customers to upgrade this product to a bundle during checkout.', 'upsell-bundle-woocommerce' ); ?></span>
 						</p>
 
 						<div class="bundle-checkout-fields" style="<?php echo ( 'yes' === $bundle_checkout_upgrade ) ? '' : 'display:none;'; ?>">
 							<p class="form-field">
-								<label for="_upsell_bundle_bundle_checkout_title"><?php esc_html_e( 'Judul Penawaran Checkout', 'upsell-bundle-woocommerce' ); ?></label>
-								<input type="text" class="upsell-bundle-input-text" id="_upsell_bundle_bundle_checkout_title" name="_upsell_bundle_bundle_checkout_title" value="<?php echo esc_attr( $bundle_checkout_title ); ?>" placeholder="<?php esc_attr_e( 'Contoh: Upgrade ke Paket Hemat!', 'upsell-bundle-woocommerce' ); ?>" />
+								<label for="_upsell_bundle_bundle_checkout_title"><?php esc_html_e( 'Checkout Offer Title', 'upsell-bundle-woocommerce' ); ?></label>
+								<input type="text" class="upsell-bundle-input-text" id="_upsell_bundle_bundle_checkout_title" name="_upsell_bundle_bundle_checkout_title" value="<?php echo esc_attr( $bundle_checkout_title ); ?>" placeholder="<?php esc_attr_e( 'Example: Upgrade to the Complete Bundle', 'upsell-bundle-woocommerce' ); ?>" />
 							</p>
 
 							<p class="form-field">
-								<label for="_upsell_bundle_bundle_checkout_desc"><?php esc_html_e( 'Deskripsi Penawaran Checkout', 'upsell-bundle-woocommerce' ); ?></label>
-								<textarea id="_upsell_bundle_bundle_checkout_desc" class="upsell-bundle-input-text" name="_upsell_bundle_bundle_checkout_desc" rows="2" placeholder="<?php esc_attr_e( 'Contoh: Dapatkan produk tambahan B dan C hanya dengan menambah...', 'upsell-bundle-woocommerce' ); ?>"><?php echo esc_textarea( $bundle_checkout_desc ); ?></textarea>
+								<label for="_upsell_bundle_bundle_checkout_desc"><?php esc_html_e( 'Checkout Offer Description', 'upsell-bundle-woocommerce' ); ?></label>
+								<textarea id="_upsell_bundle_bundle_checkout_desc" class="upsell-bundle-input-text" name="_upsell_bundle_bundle_checkout_desc" rows="2" placeholder="<?php esc_attr_e( 'Example: Add these products to your order at a special price...', 'upsell-bundle-woocommerce' ); ?>"><?php echo esc_textarea( $bundle_checkout_desc ); ?></textarea>
 							</p>
 						</div>
 
@@ -319,9 +319,9 @@ class Upsell_Bundle_Admin {
 					<table class="upsell-bundle-repeatable-table" id="post-purchase-table">
 						<thead>
 							<tr>
-								<th style="width: 30%;"><?php esc_html_e( 'Pilih Produk Upsell', 'upsell-bundle-woocommerce' ); ?></th>
+								<th style="width: 30%;"><?php esc_html_e( 'Select Upsell Product', 'upsell-bundle-woocommerce' ); ?></th>
 								<th style="width: 25%;"><?php esc_html_e( 'Override Judul (Opsional)', 'upsell-bundle-woocommerce' ); ?></th>
-								<th style="width: 30%;"><?php esc_html_e( 'Deskripsi Penawaran', 'upsell-bundle-woocommerce' ); ?></th>
+								<th style="width: 30%;"><?php esc_html_e( 'Offer Description', 'upsell-bundle-woocommerce' ); ?></th>
 								<th style="width: 10%;"><?php esc_html_e( 'Harga Upsell', 'upsell-bundle-woocommerce' ); ?></th>
 								<th style="width: 5%; text-align: center;"></th>
 							</tr>
@@ -335,7 +335,7 @@ class Upsell_Bundle_Admin {
 								?>
 								<tr class="repeatable-row">
 									<td>
-										<select class="wc-product-search" name="upsell_post_product_id[]" data-placeholder="<?php esc_attr_e( 'Cari produk...', 'woocommerce' ); ?>" data-action="woocommerce_json_search_products_and_variations" style="width: 100%;">
+										<select class="wc-product-search" name="upsell_post_product_id[]" data-placeholder="<?php esc_attr_e( 'Search products...', 'woocommerce' ); ?>" data-action="woocommerce_json_search_products_and_variations" style="width: 100%;">
 											<?php if ( $product_id ) : 
 												$prod = wc_get_product( $product_id );
 												if ( $prod && 'publish' === $prod->get_status() ) : ?>
@@ -345,7 +345,7 @@ class Upsell_Bundle_Admin {
 										</select>
 									</td>
 									<td>
-										<input type="text" name="upsell_post_title[]" value="<?php echo $title; ?>" placeholder="<?php esc_attr_e( 'Nama produk default', 'upsell-bundle-woocommerce' ); ?>" style="width: 100%;" />
+										<input type="text" name="upsell_post_title[]" value="<?php echo $title; ?>" placeholder="<?php esc_attr_e( 'Default product name', 'upsell-bundle-woocommerce' ); ?>" style="width: 100%;" />
 									</td>
 									<td>
 										<textarea name="upsell_post_description[]" rows="2" placeholder="<?php esc_attr_e( 'Tawaran istimewa setelah checkout...', 'upsell-bundle-woocommerce' ); ?>" style="width: 100%; height: 50px;"><?php echo $description; ?></textarea>
@@ -369,14 +369,14 @@ class Upsell_Bundle_Admin {
 		<table style="display:none;">
 			<tr id="order-bump-template-row">
 				<td>
-					<select class="wc-product-search" name="upsell_bump_product_id[]" data-placeholder="<?php esc_attr_e( 'Cari produk...', 'woocommerce' ); ?>" data-action="woocommerce_json_search_products_and_variations" style="width: 100%;">
+					<select class="wc-product-search" name="upsell_bump_product_id[]" data-placeholder="<?php esc_attr_e( 'Search products...', 'woocommerce' ); ?>" data-action="woocommerce_json_search_products_and_variations" style="width: 100%;">
 					</select>
 				</td>
 				<td>
-					<input type="text" name="upsell_bump_title[]" placeholder="<?php esc_attr_e( 'Nama produk default', 'upsell-bundle-woocommerce' ); ?>" style="width: 100%;" />
+					<input type="text" name="upsell_bump_title[]" placeholder="<?php esc_attr_e( 'Default product name', 'upsell-bundle-woocommerce' ); ?>" style="width: 100%;" />
 				</td>
 				<td>
-					<textarea name="upsell_bump_description[]" rows="2" placeholder="<?php esc_attr_e( 'Dapatkan produk tambahan ini seharga...', 'upsell-bundle-woocommerce' ); ?>" style="width: 100%; height: 50px;"></textarea>
+					<textarea name="upsell_bump_description[]" rows="2" placeholder="<?php esc_attr_e( 'Add a short offer description...', 'upsell-bundle-woocommerce' ); ?>" style="width: 100%; height: 50px;"></textarea>
 				</td>
 				<td>
 					<input type="number" name="upsell_bump_discount[]" value="" min="0" max="100" step="any" placeholder="0" style="width: 100%;" />
@@ -387,11 +387,11 @@ class Upsell_Bundle_Admin {
 			</tr>
 			<tr id="post-purchase-template-row">
 				<td>
-					<select class="wc-product-search" name="upsell_post_product_id[]" data-placeholder="<?php esc_attr_e( 'Cari produk...', 'woocommerce' ); ?>" data-action="woocommerce_json_search_products_and_variations" style="width: 100%;">
+					<select class="wc-product-search" name="upsell_post_product_id[]" data-placeholder="<?php esc_attr_e( 'Search products...', 'woocommerce' ); ?>" data-action="woocommerce_json_search_products_and_variations" style="width: 100%;">
 					</select>
 				</td>
 				<td>
-					<input type="text" name="upsell_post_title[]" placeholder="<?php esc_attr_e( 'Nama produk default', 'upsell-bundle-woocommerce' ); ?>" style="width: 100%;" />
+					<input type="text" name="upsell_post_title[]" placeholder="<?php esc_attr_e( 'Default product name', 'upsell-bundle-woocommerce' ); ?>" style="width: 100%;" />
 				</td>
 				<td>
 					<textarea name="upsell_post_description[]" rows="2" placeholder="<?php esc_attr_e( 'Tawaran istimewa setelah checkout...', 'upsell-bundle-woocommerce' ); ?>" style="width: 100%; height: 50px;"></textarea>

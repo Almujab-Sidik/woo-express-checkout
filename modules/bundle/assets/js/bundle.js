@@ -1,5 +1,5 @@
 jQuery(document).ready(function($) {
-	// Add Bundle to Cart button click handler
+	// Handle the Add Bundle to Cart button.
 	$(document).on('click', '.upsell-add-bundle-btn', function(e) {
 		e.preventDefault();
 		
@@ -10,8 +10,8 @@ jQuery(document).ready(function($) {
 			return;
 		}
 
-		// Show visual loading indicator
-		$button.prop('disabled', true).addClass('button-loading').text('Menambahkan Paket...');
+		// Show a loading state while the request is processed.
+		$button.prop('disabled', true).addClass('button-loading').text('Adding bundle...');
 
 		$.ajax({
 			url: upsellBundleData.ajax_url,
@@ -23,21 +23,21 @@ jQuery(document).ready(function($) {
 			},
 			success: function(response) {
 				if (response.success) {
-					// Redirect to cart page
+					// Redirect to the cart page.
 					window.location.href = upsellBundleData.cart_url;
 				} else {
-					$button.prop('disabled', false).removeClass('button-loading').text('Tambah Paket Bundle ke Keranjang');
-					alert(response.data.message || 'Gagal menambahkan bundle ke keranjang.');
+					$button.prop('disabled', false).removeClass('button-loading').text('Add Bundle to Cart');
+					alert(response.data.message || 'Unable to add the bundle to the cart.');
 				}
 			},
 			error: function() {
-				$button.prop('disabled', false).removeClass('button-loading').text('Tambah Paket Bundle ke Keranjang');
-				alert('Terjadi kesalahan koneksi.');
+				$button.prop('disabled', false).removeClass('button-loading').text('Add Bundle to Cart');
+				alert('A connection error occurred.');
 			}
 		});
 	});
 
-	// Checkout Bundle Upgrade checkbox handler
+	// Handle checkout bundle upgrade checkbox changes.
 	$(document).on('change', '.upsell-checkout-bundle-checkbox', function() {
 		var $checkbox = $(this);
 		var $card = $checkbox.closest('.upsell-bundle-bump-card');
@@ -66,7 +66,7 @@ jQuery(document).ready(function($) {
 					} else {
 						$card.removeClass('bump-checked');
 					}
-					// Update WooCommerce checkout totals
+					// Refresh WooCommerce checkout totals.
 					$(document.body).trigger('update_checkout');
 				} else {
 					$checkbox.prop('checked', !checked);
@@ -75,14 +75,14 @@ jQuery(document).ready(function($) {
 					} else {
 						$card.removeClass('bump-checked');
 					}
-					alert(response.data.message || 'Gagal memperbarui paket bundle.');
+					alert(response.data.message || 'Unable to update the bundle.');
 				}
 			},
 			error: function() {
 				$card.removeClass('bump-loading');
 				$checkbox.prop('disabled', false);
 				$checkbox.prop('checked', !checked);
-				alert('Terjadi kesalahan koneksi.');
+				alert('A connection error occurred.');
 			}
 		});
 	});

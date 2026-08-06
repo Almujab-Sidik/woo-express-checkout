@@ -1,5 +1,5 @@
 jQuery(document).ready(function($) {
-	// Accept Post-Purchase Upsell
+	// Handle acceptance of the post-purchase upsell.
 	$(document).on('click', '.upsell-accept-btn', function(e) {
 		e.preventDefault();
 		
@@ -12,8 +12,8 @@ jQuery(document).ready(function($) {
 			return;
 		}
 
-		// UI visual spinner loading state
-		$button.prop('disabled', true).text('Menyiapkan Pesanan...');
+		// Show a loading state while the request is being processed.
+		$button.prop('disabled', true).text('Preparing your order...');
 
 		$.ajax({
 			url: upsellBundlePost.ajax_url,
@@ -27,21 +27,21 @@ jQuery(document).ready(function($) {
 			},
 			success: function(response) {
 				if (response.success && response.data.pay_url) {
-					// Redirect to standard Pay Page of new order
+					// Redirect to the payment page for the new order.
 					window.location.href = response.data.pay_url;
 				} else {
-					$button.prop('disabled', false).text('Ya, Tambahkan ke Pesanan Saya!');
-					alert(response.data.message || 'Gagal menambahkan penawaran ke pesanan.');
+					$button.prop('disabled', false).text('Yes, Add It to My Order');
+					alert(response.data.message || 'Unable to add the offer to your order.');
 				}
 			},
 			error: function() {
-				$button.prop('disabled', false).text('Ya, Tambahkan ke Pesanan Saya!');
-				alert('Terjadi kesalahan koneksi.');
+				$button.prop('disabled', false).text('Yes, Add It to My Order');
+				alert('A connection error occurred.');
 			}
 		});
 	});
 
-	// Decline/Skip Post-Purchase Upsell
+	// Handle declining the post-purchase upsell.
 	$(document).on('click', '#upsell-decline-trigger', function(e) {
 		e.preventDefault();
 		$('#upsell-post-purchase-modal').fadeOut(300, function() {

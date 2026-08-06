@@ -3,8 +3,8 @@
 /**
  * Plugin Name: WooCommerce Express Checkout
  * Plugin URI:  https://era.ai/woo-express-checkout
- * Description: Pengalaman checkout ala Shopify untuk WooCommerce — guest checkout cepat, field minimal, bundle offer, dan auto account creation.
- * Version:     0.1.3
+ * Description: Streamlined WooCommerce checkout with guest checkout, minimal fields, bundle offers, and automatic account creation.
+ * Version:     0.1.4
  * Author:      Era AI
  * Text Domain: woo-express-checkout
  * Domain Path: /languages
@@ -22,16 +22,15 @@ if (! defined('ABSPATH')) {
     exit;
 }
 
-define('WEC_VERSION', '0.1.3');
+define('WEC_VERSION', '0.1.4');
 define('WEC_FILE', __FILE__);
 define('WEC_PATH', plugin_dir_path(__FILE__));
 define('WEC_URL', plugin_dir_url(__FILE__));
 define('WEC_BASENAME', plugin_basename(__FILE__));
 
-// Self-hosted update checker (GitHub Releases) — plugin ini tidak ada di
-// wordpress.org, jadi butuh mekanisme "Update tersedia" sendiri. Konfigurasi
-// (repo, branch, token) sengaja diletakkan sebagai constant di wp-config.php,
-// bukan hard-code di sini, supaya token tidak ikut ter-commit ke repo.
+// Self-hosted update checker using GitHub Releases. Repository settings can be
+// overridden through wp-config.php so private repository credentials remain
+// outside the plugin source.
 require_once WEC_PATH . 'includes/plugin-update-checker/plugin-update-checker.php';
 
 $wec_github_repo = defined('WEC_GITHUB_REPO') && WEC_GITHUB_REPO
@@ -59,8 +58,8 @@ add_action('before_woocommerce_init', function () {
     }
 });
 
-// Maps WEC\Guest_Checkout -> includes/class-guest-checkout.php,
-// WEC\Emails\Set_Password -> includes/emails/class-set-password.php.
+// Maps WEC\Guest_Checkout to includes/class-guest-checkout.php and
+// WEC\Emails\Set_Password to includes/emails/class-set-password.php.
 spl_autoload_register(function ($class) {
     if (0 !== strpos($class, 'WEC\\')) {
         return;
@@ -87,7 +86,7 @@ add_action('plugins_loaded', function () {
         add_action('admin_notices', function () {
             printf(
                 '<div class="notice notice-error"><p>%s</p></div>',
-                esc_html__('WooCommerce Express Checkout membutuhkan plugin WooCommerce yang aktif untuk berjalan.', 'woo-express-checkout')
+                esc_html__('WooCommerce Express Checkout requires the WooCommerce plugin to be active.', 'woo-express-checkout')
             );
         });
         return;

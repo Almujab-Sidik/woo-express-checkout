@@ -1,12 +1,11 @@
 <?php
 
 /**
- * Halaman setting terpadu — WooCommerce > Express Checkout.
+ * Unified settings page at WooCommerce > Express Checkout.
  *
- * 3 toggle utama untuk modul Express Checkout/Bundle & Upsell/Coupon
- * Display Manager. Panel Bundle & Coupon Manager memanggil langsung method
- * render setting asli milik class tsb (tidak ditulis ulang) supaya field
- * yang sudah ada (color picker, grid pilih kupon, dst.) tetap identik.
+ * Three module toggles control Express Checkout, Bundle & Upsell, and Coupon
+ * Display Manager. Embedded panels call the original module renderers so
+ * their existing controls remain consistent.
  *
  * @package WEC
  */
@@ -49,25 +48,23 @@ class Settings
         register_setting('wec_checkout_settings_group', 'wec_checkout_layout_enabled');
         register_setting('wec_checkout_settings_group', 'wec_checkout_product_pages_enabled');
 
-        // Master module toggles default OFF — every feature is opt-in.
-        // Admin turns them on from WooCommerce > Express Checkout.
+        // Master module toggles default to off so every feature is opt-in.
         foreach (array('wec_module_checkout_enabled', 'wec_module_bundle_enabled', 'wec_module_coupon_enabled') as $option) {
             if (false === get_option($option)) {
                 update_option($option, 'no');
             }
         }
 
-        // Sub-feature toggles default ON — they only take effect once their
-        // parent module (Express Checkout) is enabled, so it's fine for them
-        // to be pre-checked.
+        // Express Checkout sub-feature toggles default to on and only take
+        // effect when the parent module is enabled.
         foreach (array('wec_checkout_guest_enabled', 'wec_checkout_layout_enabled') as $option) {
             if (false === get_option($option)) {
                 update_option($option, 'yes');
             }
         }
 
-        // Checkout per Produk requires a separate SCF setup step, so it
-        // defaults OFF like the master module toggles.
+        // Product-Specific Checkout requires a separate SCF setup step, so it
+        // defaults to off.
         if (false === get_option('wec_checkout_product_pages_enabled')) {
             update_option('wec_checkout_product_pages_enabled', 'no');
         }
@@ -82,11 +79,11 @@ class Settings
         <div class="wrap wec-settings-wrap">
             <h1><?php esc_html_e('WooCommerce Express Checkout', 'woo-express-checkout'); ?></h1>
             <p class="description">
-                <?php esc_html_e('Aktifkan/nonaktifkan tiga fitur di bawah ini. Setting detail masing-masing fitur akan muncul begitu fiturnya diaktifkan.', 'woo-express-checkout'); ?>
+                <?php esc_html_e('Enable or disable the three modules below. Detailed settings appear when a module is enabled.', 'woo-express-checkout'); ?>
             </p>
 
             <div class="card" style="max-width: 100%; margin-top: 16px;">
-                <h2><?php esc_html_e('Fitur Aktif', 'woo-express-checkout'); ?></h2>
+                <h2><?php esc_html_e('Enabled Modules', 'woo-express-checkout'); ?></h2>
                 <form method="post" action="options.php">
                     <?php settings_fields('wec_module_settings_group'); ?>
                     <table class="form-table" role="presentation">
@@ -95,7 +92,7 @@ class Settings
                             <td>
                                 <label>
                                     <input type="checkbox" name="wec_module_checkout_enabled" value="yes" <?php checked($checkout_on); ?> />
-                                    <?php esc_html_e('Layout checkout Shopify-style, guest checkout, auto account creation.', 'woo-express-checkout'); ?>
+                                    <?php esc_html_e('Streamlined checkout layout, guest checkout, and automatic account creation.', 'woo-express-checkout'); ?>
                                 </label>
                             </td>
                         </tr>
@@ -104,7 +101,7 @@ class Settings
                             <td>
                                 <label>
                                     <input type="checkbox" name="wec_module_bundle_enabled" value="yes" <?php checked($bundle_on); ?> />
-                                    <?php esc_html_e('Order bump di checkout, bundle produk, dan upsell post-purchase.', 'woo-express-checkout'); ?>
+                                    <?php esc_html_e('Checkout order bumps, product bundles, and post-purchase upsells.', 'woo-express-checkout'); ?>
                                 </label>
                             </td>
                         </tr>
@@ -113,18 +110,18 @@ class Settings
                             <td>
                                 <label>
                                     <input type="checkbox" name="wec_module_coupon_enabled" value="yes" <?php checked($coupon_on); ?> />
-                                    <?php esc_html_e('Reposisi & styling field kupon di checkout, daftar kupon yang bisa diklik.', 'woo-express-checkout'); ?>
+                                    <?php esc_html_e('Coupon placement, styling, and clickable coupon lists.', 'woo-express-checkout'); ?>
                                 </label>
                             </td>
                         </tr>
                     </table>
-                    <?php submit_button(__('Simpan Fitur Aktif', 'woo-express-checkout')); ?>
+                    <?php submit_button(__('Save Enabled Modules', 'woo-express-checkout')); ?>
                 </form>
             </div>
 
             <?php if ($checkout_on) : ?>
                 <div class="card wec-settings-subpanel" style="max-width: 100%; margin-top: 16px;">
-                    <h2><?php esc_html_e('Setting — Express Checkout', 'woo-express-checkout'); ?></h2>
+                    <h2><?php esc_html_e('Express Checkout Settings', 'woo-express-checkout'); ?></h2>
                     <form method="post" action="options.php">
                         <?php settings_fields('wec_checkout_settings_group'); ?>
                         <table class="form-table" role="presentation">
@@ -133,7 +130,7 @@ class Settings
                                 <td>
                                     <label>
                                         <input type="checkbox" name="wec_checkout_guest_enabled" value="yes" <?php checked('yes' === get_option('wec_checkout_guest_enabled', 'yes')); ?> />
-                                        <?php esc_html_e('Sembunyikan form login, checkout tanpa perlu akun (akun dibuat otomatis di belakang layar).', 'woo-express-checkout'); ?>
+                                        <?php esc_html_e('Hide the login form and allow checkout without an account. New accounts are created automatically after payment.', 'woo-express-checkout'); ?>
                                     </label>
                                 </td>
                             </tr>
@@ -142,21 +139,21 @@ class Settings
                                 <td>
                                     <label>
                                         <input type="checkbox" name="wec_checkout_layout_enabled" value="yes" <?php checked('yes' === get_option('wec_checkout_layout_enabled', 'yes')); ?> />
-                                        <?php esc_html_e('Layout checkout 2 kolom ala Shopify (kolom kiri form, kolom kanan ringkasan pesanan sticky).', 'woo-express-checkout'); ?>
+                                        <?php esc_html_e('Two-column checkout layout with the customer form on the left and a sticky order summary on the right.', 'woo-express-checkout'); ?>
                                     </label>
                                 </td>
                             </tr>
                             <tr>
-                                <th scope="row"><?php esc_html_e('Checkout per Produk (SCF)', 'woo-express-checkout'); ?></th>
+                                <th scope="row"><?php esc_html_e('Product-Specific Checkout (SCF)', 'woo-express-checkout'); ?></th>
                                 <td>
                                     <label>
                                         <input type="checkbox" name="wec_checkout_product_pages_enabled" value="yes" <?php checked('yes' === get_option('wec_checkout_product_pages_enabled', 'no')); ?> />
-                                        <?php esc_html_e('Buat halaman checkout khusus per produk — tiap halaman punya URL sendiri untuk ditempel ke tombol CTA landing page.', 'woo-express-checkout'); ?>
+                                        <?php esc_html_e('Create dedicated checkout pages for individual products. Each page has its own URL for landing-page calls to action.', 'woo-express-checkout'); ?>
                                     </label>
                                     <p class="description">
                                         <?php
                                         echo wp_kses(
-                                            __('Membutuhkan plugin <strong>Secure Custom Fields</strong> (atau ACF) aktif agar field "Produk" muncul di tiap halaman Checkout Produk.', 'woo-express-checkout'),
+                                            __('An active <strong>Secure Custom Fields</strong> (or ACF) plugin is required for the "Product" field to appear on Product-Specific Checkout pages.', 'woo-express-checkout'),
                                             array('strong' => array())
                                         );
                                         ?>
@@ -164,24 +161,24 @@ class Settings
                                     <?php if ('yes' === get_option('wec_checkout_product_pages_enabled', 'no')) : ?>
                                         <p>
                                             <a href="<?php echo esc_url(admin_url('edit.php?post_type=wec_product_checkout')); ?>" class="button">
-                                                <?php esc_html_e('Kelola Halaman Checkout Produk', 'woo-express-checkout'); ?>
+                                                <?php esc_html_e('Manage Product Checkout Pages', 'woo-express-checkout'); ?>
                                             </a>
                                             <a href="<?php echo esc_url(admin_url('post-new.php?post_type=wec_product_checkout')); ?>" class="button">
-                                                <?php esc_html_e('Tambah Halaman Baru', 'woo-express-checkout'); ?>
+                                                <?php esc_html_e('Add New Page', 'woo-express-checkout'); ?>
                                             </a>
                                         </p>
                                     <?php endif; ?>
                                 </td>
                             </tr>
                         </table>
-                        <?php submit_button(__('Simpan Setting Express Checkout', 'woo-express-checkout')); ?>
+                        <?php submit_button(__('Save Express Checkout Settings', 'woo-express-checkout')); ?>
                     </form>
                 </div>
             <?php endif; ?>
 
             <?php if ($bundle_on && class_exists('\Upsell_Bundle_Admin')) : ?>
                 <div class="wec-settings-subpanel" style="margin-top: 16px;">
-                    <h2 style="padding: 0 0 8px;"><?php esc_html_e('Setting — Bundle & Upsell', 'woo-express-checkout'); ?></h2>
+                    <h2 style="padding: 0 0 8px;"><?php esc_html_e('Bundle & Upsell Settings', 'woo-express-checkout'); ?></h2>
                     <?php \Upsell_Bundle_Admin::get_instance()->render_settings_page(); ?>
                 </div>
             <?php endif; ?>

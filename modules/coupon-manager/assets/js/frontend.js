@@ -139,7 +139,7 @@
 
 		// Suppress duplicate WC success notices.
 		$( '.woocommerce-message' ).filter( function () {
-			return /applied|sukses|berhasil|coupon|kupon/i.test( $( this ).text() );
+		return /applied|success|coupon/i.test( $( this ).text() );
 		} ).hide();
 
 		// Update the interactive area with applied pills & optionally input field

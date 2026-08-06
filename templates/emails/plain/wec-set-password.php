@@ -1,6 +1,6 @@
 <?php
 /**
- * Email template (Plain text) — Buat Password.
+ * Plain-text email template for setting an account password.
  *
  * @package WEC
  */
@@ -21,21 +21,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 echo "= " . esc_html( $email_heading ) . " =\n\n";
 
-printf( esc_html__( 'Halo %s,', 'woo-express-checkout' ), esc_html( $user->display_name ) );
+printf( esc_html__( 'Hello %s,', 'woo-express-checkout' ), esc_html( $user->display_name ) );
 echo "\n\n";
 
-esc_html_e( 'Terima kasih telah berbelanja di toko kami. Saat checkout, akun Anda telah dibuat secara otomatis sehingga Anda dapat melihat riwayat pesanan dan melakukan pembelian berikutnya lebih cepat.', 'woo-express-checkout' );
+esc_html_e( 'Thank you for shopping with us. An account was created automatically during checkout so you can view your order history and complete future purchases faster.', 'woo-express-checkout' );
 echo "\n\n";
 
-esc_html_e( 'Silakan buat password untuk mengakses akun Anda melalui link berikut:', 'woo-express-checkout' );
+esc_html_e( 'Please set a password to access your account using the following link:', 'woo-express-checkout' );
 echo "\n\n";
 
 echo esc_url( $reset_url ) . "\n\n";
 
-esc_html_e( 'Link di atas akan kadaluarsa dalam 24 jam.', 'woo-express-checkout' );
+esc_html_e( 'The link above expires in 24 hours.', 'woo-express-checkout' );
 echo "\n\n";
 
-esc_html_e( 'Jika Anda tidak merasa melakukan pembelian ini, abaikan email ini.', 'woo-express-checkout' );
+esc_html_e( 'If you did not place this order, you can safely ignore this email.', 'woo-express-checkout' );
 echo "\n";
 
 echo "\n----------------------------------------\n";

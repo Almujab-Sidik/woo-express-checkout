@@ -94,8 +94,8 @@ class Upsell_Bundle_Product_Bundle {
 		}
 
 		// The box shows only the additional products as cards — the main
-		// product is already shown on this page. But the paket price and the
-		// add-to-cart button DO include the main product: clicking "add
+		// product is already shown on this page. The bundle price and the
+		// The add-to-cart button includes the main product: clicking "add
 		// bundle" adds the main product plus the additional products.
 		// (Trashed products still report in_stock=true, so status is checked.)
 		$all_items = array();
@@ -126,8 +126,8 @@ class Upsell_Bundle_Product_Bundle {
 
 		?>
 		<div class="upsell-bundle-box">
-			<h3><?php esc_html_e( 'Beli Hemat Bersama (Paket Bundle)', 'upsell-bundle-woocommerce' ); ?></h3>
-			<p class="bundle-subtitle"><?php esc_html_e( 'Dapatkan harga spesial dengan membeli produk-produk ini sekaligus!', 'upsell-bundle-woocommerce' ); ?></p>
+			<h3><?php esc_html_e( 'Save More with a Bundle', 'upsell-bundle-woocommerce' ); ?></h3>
+			<p class="bundle-subtitle"><?php esc_html_e( 'Get a special price when you purchase these products together.', 'upsell-bundle-woocommerce' ); ?></p>
 
 			<div class="bundle-items-list">
 				<?php
@@ -152,7 +152,7 @@ class Upsell_Bundle_Product_Bundle {
 
 			<div class="bundle-footer-summary">
 				<div class="bundle-pricing-summary">
-					<span class="bundle-price-label"><?php esc_html_e( 'Harga Paket Bundle:', 'upsell-bundle-woocommerce' ); ?></span>
+					<span class="bundle-price-label"><?php esc_html_e( 'Bundle Price:', 'upsell-bundle-woocommerce' ); ?></span>
 					<div class="bundle-price-box">
 						<?php if ( $total_original_price > $bundle_price ) : ?>
 							<span class="bundle-original-strike"><?php echo wc_price( $total_original_price ); ?></span>
@@ -163,7 +163,7 @@ class Upsell_Bundle_Product_Bundle {
 
 				<?php if ( $is_any_out_of_stock ) : ?>
 					<div class="bundle-stock-notice out-of-stock">
-						<?php esc_html_e( 'Stok tidak tersedia pada salah satu produk paket ini.', 'upsell-bundle-woocommerce' ); ?>
+						<?php esc_html_e( 'One or more products in this bundle are out of stock.', 'upsell-bundle-woocommerce' ); ?>
 					</div>
 					<button class="button alt upsell-add-bundle-btn" disabled>
 						<?php esc_html_e( 'Stok Habis', 'upsell-bundle-woocommerce' ); ?>
@@ -171,7 +171,7 @@ class Upsell_Bundle_Product_Bundle {
 				<?php else : ?>
 					<button class="button alt upsell-add-bundle-btn"
 							data-main-id="<?php echo esc_attr( $product_id ); ?>">
-						<?php esc_html_e( 'Tambah Paket Bundle ke Keranjang', 'upsell-bundle-woocommerce' ); ?>
+						<?php esc_html_e( 'Add Bundle to Cart', 'upsell-bundle-woocommerce' ); ?>
 					</button>
 				<?php endif; ?>
 			</div>
@@ -207,7 +207,7 @@ class Upsell_Bundle_Product_Bundle {
 		foreach ( $product_ids as $pid ) {
 			$prod = wc_get_product( $pid );
 			if ( ! $prod || 'publish' !== $prod->get_status() || ! $prod->is_in_stock() ) {
-				wp_send_json_error( array( 'message' => 'Salah satu produk tidak tersedia atau habis stok.' ) );
+				wp_send_json_error( array( 'message' => 'One or more bundle products are unavailable or out of stock.' ) );
 			}
 			$price = floatval( $prod->get_price() );
 			$products[] = array(
@@ -389,11 +389,11 @@ class Upsell_Bundle_Product_Bundle {
 
 			$display_title = get_post_meta( $product_id, '_upsell_bundle_bundle_checkout_title', true );
 			if ( empty( $display_title ) ) {
-				$display_title = sprintf( __( 'Upgrade ke Paket Bundle %s', 'upsell-bundle-woocommerce' ), $main_product->get_title() );
+				$display_title = sprintf( __( 'Upgrade to the %s Bundle', 'upsell-bundle-woocommerce' ), $main_product->get_title() );
 			}
 			$display_desc = get_post_meta( $product_id, '_upsell_bundle_bundle_checkout_desc', true );
 			if ( empty( $display_desc ) ) {
-				$display_desc = __( 'Dapatkan penawaran bundle hemat untuk pesanan Anda!', 'upsell-bundle-woocommerce' );
+				$display_desc = __( 'Add complementary products to your order at a special bundle price.', 'upsell-bundle-woocommerce' );
 			}
 
 			$img_product = ! empty( $bundle_products ) ? wc_get_product( $bundle_products[0] ) : $main_product;
@@ -454,7 +454,7 @@ class Upsell_Bundle_Product_Bundle {
 			}
 
 			if ( ! $main_cart_item_key ) {
-				wp_send_json_error( array( 'message' => 'Produk utama tidak ditemukan di keranjang.' ) );
+				wp_send_json_error( array( 'message' => 'The main product was not found in the cart.' ) );
 			}
 
 			$bundle_products = get_post_meta( $main_id, '_upsell_bundle_bundle_products', true ) ?: array();
@@ -462,7 +462,7 @@ class Upsell_Bundle_Product_Bundle {
 			// Reject: without this, a request could upgrade to the "bundle"
 			// price while only the main product is in the cart.
 			if ( empty( $bundle_products ) ) {
-				wp_send_json_error( array( 'message' => 'Konfigurasi bundle tidak valid.' ) );
+				wp_send_json_error( array( 'message' => 'The bundle configuration is invalid.' ) );
 			}
 
 			$bundle_group_id = uniqid( 'bundle_' );
@@ -474,7 +474,7 @@ class Upsell_Bundle_Product_Bundle {
 			foreach ( $product_ids as $pid ) {
 				$prod = wc_get_product( $pid );
 				if ( ! $prod || 'publish' !== $prod->get_status() || ! $prod->is_in_stock() ) {
-					wp_send_json_error( array( 'message' => 'Salah satu produk bundle habis stok.' ) );
+					wp_send_json_error( array( 'message' => 'One or more bundle products are out of stock.' ) );
 				}
 				$price = floatval( $prod->get_price() );
 				$products[] = array(
@@ -533,7 +533,7 @@ class Upsell_Bundle_Product_Bundle {
 			}
 
 			if ( ! $bundle_group_id ) {
-				wp_send_json_error( array( 'message' => 'Grup bundle tidak ditemukan di keranjang.' ) );
+				wp_send_json_error( array( 'message' => 'The bundle group was not found in the cart.' ) );
 			}
 
 			// 1. Remove the bundle meta from the main product and restore its regular price in memory.

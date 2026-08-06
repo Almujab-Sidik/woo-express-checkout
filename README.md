@@ -1,39 +1,39 @@
 # WooCommerce Express Checkout
 
-Plugin WooCommerce yang menggabungkan pengalaman checkout ala Shopify, bundle & upsell, coupon display manager, dan halaman checkout khusus per produk — dalam satu plugin dengan modul yang bisa diaktifkan/dinonaktifkan secara terpisah.
+WooCommerce plugin that combines streamlined guest checkout, bundle and upsell tools, coupon display management, and product-specific checkout pages in one modular package.
 
 ## Fitur
 
-- **Express Checkout** — layout checkout 2 kolom ala Shopify, guest checkout (tanpa perlu login), akun pelanggan dibuat otomatis setelah pembayaran berhasil.
-- **Bundle & Upsell** — order bump di halaman checkout, bundle produk di halaman produk, upsell post-purchase setelah order selesai.
-- **Coupon Display Manager** — reposisi & styling field kupon di checkout, daftar kupon yang bisa diklik langsung.
-- **Checkout per Produk** — halaman checkout khusus per produk (didukung [Secure Custom Fields](https://wordpress.org/plugins/secure-custom-fields/)), 1 URL per produk untuk ditempel ke tombol CTA landing page.
+- **Express Checkout** — two-column checkout layout, guest checkout, and automatic customer account creation after successful payment.
+- **Bundle & Upsell** — checkout order bumps, product bundles, and post-purchase upsell offers.
+- **Coupon Display Manager** — configurable coupon placement, styling, and clickable coupon lists.
+- **Product-Specific Checkout** — dedicated checkout pages per product, supported by [Secure Custom Fields](https://wordpress.org/plugins/secure-custom-fields/), with one URL per page for landing-page calls to action.
 
-Semua fitur di atas defaultnya **nonaktif** — aktifkan lewat **WooCommerce → Express Checkout** sesuai kebutuhan.
+All features above are **disabled by default** and can be enabled from **WooCommerce → Express Checkout**.
 
 ## Requirement
 
 - WordPress 6.0+
 - WooCommerce 8.0+
 - PHP 8.1+
-- (Opsional) [Secure Custom Fields](https://wordpress.org/plugins/secure-custom-fields/) atau ACF — dibutuhkan hanya untuk fitur Checkout per Produk.
+- (Optional) [Secure Custom Fields](https://wordpress.org/plugins/secure-custom-fields/) or ACF — required only for Product-Specific Checkout.
 
-## Instalasi
+## Installation
 
-Plugin ini tidak didistribusikan lewat wordpress.org. Ada 2 cara:
+This plugin is not distributed through wordpress.org. Install it using one of the following methods:
 
-1. **Manual** — download ZIP dari [Releases](../../releases), lalu upload lewat **Plugins → Add New → Upload Plugin**.
-2. **Update otomatis** — setelah instalasi pertama, plugin akan otomatis mengecek [Releases](../../releases) repo ini dan menampilkan notifikasi "Update tersedia" di wp-admin setiap ada versi baru.
+1. **Manual** — download the ZIP from [Releases](../../releases), then upload it through **Plugins → Add New → Upload Plugin**.
+2. **Automatic updates** — after the initial installation, the plugin checks this repository's [Releases](../../releases) and displays an update notice in wp-admin when a new version is available.
 
-## Update
+## Updates
 
-Plugin menyertakan [Plugin Update Checker](https://github.com/YahnisElsts/plugin-update-checker) yang menunjuk ke repo ini. Alur rilis versi baru:
+The plugin includes [Plugin Update Checker](https://github.com/YahnisElsts/plugin-update-checker), configured to use this repository. To publish a new version:
 
-1. Naikkan `Version:` di header `woo-express-checkout.php`.
-2. Commit & push ke branch `main`.
-3. Buat **GitHub Release** baru dengan tag sesuai versi (mis. `v0.2.0`).
-4. Situs yang sudah terpasang akan otomatis mendeteksi rilis baru tersebut.
+1. Increase the `Version:` value in the `woo-express-checkout.php` header.
+2. Commit and push to the `main` branch.
+3. Create a **GitHub Release** with a matching tag, such as `v0.2.0`.
+4. Existing installations will detect the new release automatically.
 
-## Lisensi
+## License
 
 GPL-2.0-or-later

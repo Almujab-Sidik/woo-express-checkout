@@ -1,6 +1,6 @@
 <?php
 /**
- * Template halaman "Checkout Produk" — 1 produk, 1 URL checkout.
+ * Product-specific checkout template for one product and one checkout URL.
  *
  * @package WEC
  */

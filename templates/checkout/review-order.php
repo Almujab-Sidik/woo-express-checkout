@@ -1,13 +1,12 @@
 <?php
 
 /**
- * Review Order Table — versi enhanced dengan thumbnail.
+ * Order review table with product thumbnails.
  *
- * Override dari WooCommerce checkout/review-order.php (v5.2.0).
- * Tetap mempertahankan class 'woocommerce-checkout-review-order-table'
- * pada wrapper agar AJAX fragment update tetap berfungsi.
+ * Overrides WooCommerce checkout/review-order.php (v5.2.0) while retaining
+ * the standard wrapper class required for AJAX fragment updates.
  *
- * Semua hook standar (woocommerce_review_order_*) dipertahankan.
+ * Standard woocommerce_review_order_* hooks are preserved.
  *
  * @package WEC
  */

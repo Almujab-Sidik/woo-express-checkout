@@ -43,12 +43,12 @@
 
 /* Hide the shipping-fields card when WooCommerce renders it empty
    (no shipping methods available / ship-to-different-address collapsed) —
-   prevents a blank bordered box from showing above Pembayaran. */
+   prevents a blank bordered box from showing above the payment section. */
 .woocommerce-checkout .woocommerce-shipping-fields:not(:has(*)) {
 	display: none !important;
 }
 
-/* Express payment buttons (Google Pay / PayPal / Shop Pay-style buttons
+/* Express payment buttons (Google Pay / PayPal / gateway-provided buttons
    injected by some gateways, e.g. Stripe Payment Request Button or
    WooCommerce Payments Express Checkout) are intentionally not part of
    this layout — hide them defensively if a gateway injects one. */
@@ -309,7 +309,7 @@
 	min-width: 0;
 }
 
-/* ---------- Field kupon ---------- */
+/* ---------- Coupon field ---------- */
 .wec-coupon-field {
 	margin-bottom: 18px;
 	padding-bottom: 18px;
@@ -690,7 +690,7 @@
 @media (min-width: 992px) {
 	.wec-checkout-grid {
 		display: grid !important;
-		grid-template-columns: 58% 38% !important; /* Perfect Shopify-style ratio */
+		grid-template-columns: 58% 38% !important; /* Balanced two-column ratio */
 		column-gap: 4% !important;
 		row-gap: 0 !important;
 		align-items: start !important;

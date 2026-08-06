@@ -1,8 +1,8 @@
 <?php
 /**
- * Uninstall — bersihkan opsi plugin.
+ * Uninstall — remove plugin options.
  *
- * Catatan: user & order yang sudah dibuat TIDAK dihapus.
+ * Existing users and orders are intentionally preserved.
  *
  * @package WEC
  */

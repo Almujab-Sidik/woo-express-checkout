@@ -1,9 +1,9 @@
 <?php
 /**
- * Custom WooCommerce Email: link "Buat Password".
+ * Custom WooCommerce email containing a password setup link.
  *
- * Dikirim ke pelanggan baru yang checkout tanpa login agar bisa
- * membuat password akun mereka via link reset password WP.
+	 * Sent to new customers who checked out without logging in so they can set
+	 * their account password through the native WordPress reset flow.
  *
  * @package WEC\Emails
  */
@@ -22,12 +22,12 @@ class Set_Password extends \WC_Email {
 
 	public function __construct() {
 		$this->id             = 'wec_set_password';
-		$this->title          = __( 'Express Checkout: Buat Password', 'woo-express-checkout' );
-		$this->description    = __( 'Dikirim ke pelanggan baru yang checkout tanpa login, berisi link untuk membuat password akun mereka.', 'woo-express-checkout' );
+		$this->title          = __( 'Express Checkout: Set Password', 'woo-express-checkout' );
+		$this->description    = __( 'Sent to new customers who checked out without logging in and need to set an account password.', 'woo-express-checkout' );
 		$this->customer_email = true;
 
-		$this->subject = __( 'Buat password akun Anda di {site_title}', 'woo-express-checkout' );
-		$this->heading = __( 'Buat Password Akun Anda', 'woo-express-checkout' );
+		$this->subject = __( 'Set your account password at {site_title}', 'woo-express-checkout' );
+		$this->heading = __( 'Set Your Account Password', 'woo-express-checkout' );
 
 		$this->template_html  = 'emails/wec-set-password.php';
 		$this->template_plain = 'emails/plain/wec-set-password.php';
@@ -51,8 +51,7 @@ class Set_Password extends \WC_Email {
 			return;
 		}
 
-		// Pakai flow reset-password native WP (wp-login.php?action=rp), bukan
-		// mekanisme token buatan sendiri.
+		// Use WordPress's native password reset flow instead of a custom token.
 		$reset_url = add_query_arg(
 			array(
 				'action' => 'rp',

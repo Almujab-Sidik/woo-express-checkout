@@ -1,15 +1,14 @@
 <?php
 
 /**
- * Checkout Form — Layout 2 Kolom (Shopify-style).
+ * Checkout form with a two-column layout.
  *
- * Override dari WooCommerce checkout/form-checkout.php (v9.4.0).
- * Mengubah layout default menjadi 2 kolom:
- * - Kiri:  customer details + metode pembayaran + Place Order
- * - Kanan: order summary (sticky di desktop, accordion di mobile)
+ * Override of WooCommerce checkout/form-checkout.php (v9.4.0).
+ * The layout places customer details, payment, and order submission on the
+ * left, with a sticky desktop summary and mobile accordion on the right.
  *
- * Semua hook standar WooCommerce tetap dipertahankan agar plugin lain
- * (pixel tracking, CartFlows, dll.) tetap berfungsi.
+ * Standard WooCommerce hooks are preserved so integrations such as
+ * pixel tracking and CartFlows continue to function.
  *
  * @package WEC
  */
@@ -34,11 +33,11 @@ if (! $checkout->is_registration_enabled() && $checkout->is_registration_require
 
     <div class="wec-checkout-wrapper">
 
-        <?php // Accordion ringkasan pesanan — tampil hanya di layar mobile (<768px). ?>
+        <?php // Mobile-only order summary accordion. ?>
         <div class="wec-summary-toggle" id="wec-summary-toggle">
             <button type="button" class="wec-summary-toggle-btn" aria-expanded="false" aria-controls="wec-summary-mobile">
                 <span class="wec-summary-toggle-icon" aria-hidden="true">&#9662;</span>
-                <span class="wec-summary-toggle-label"><?php esc_html_e('Lihat ringkasan pesanan', 'woo-express-checkout'); ?></span>
+                <span class="wec-summary-toggle-label"><?php esc_html_e('View order summary', 'woo-express-checkout'); ?></span>
                 <span class="wec-summary-toggle-total"><?php wc_cart_totals_order_total_html(); ?></span>
             </button>
         </div>
@@ -69,12 +68,11 @@ if (! $checkout->is_registration_enabled() && $checkout->is_registration_require
                 <?php do_action('woocommerce_checkout_before_order_review'); ?>
 
                 <?php
-                // ID 'order_review' dipertahankan (bukan nama yang akurat lagi
-                // di layout ini) supaya AJAX fragment-update JS WooCommerce
-                // bawaan tetap mengenali & mengganti .woocommerce-checkout-payment.
+                // Preserve the standard ID so WooCommerce can update checkout
+                // fragments and replace the payment section during AJAX calls.
                 ?>
                 <div id="order_review" class="woocommerce-checkout-review-order wec-payment-section">
-                    <h3 class="wec-section-title"><?php esc_html_e('Pembayaran', 'woo-express-checkout'); ?></h3>
+                    <h3 class="wec-section-title"><?php esc_html_e('Payment', 'woo-express-checkout'); ?></h3>
                     <?php woocommerce_checkout_payment(); ?>
                 </div>
 
