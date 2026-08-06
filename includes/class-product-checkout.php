@@ -36,6 +36,8 @@ class Product_Checkout
 
     public function register_post_type()
     {
+        $rewrite_slug = $this->get_rewrite_slug();
+
         register_post_type(self::POST_TYPE, array(
             'labels' => array(
                 'name'          => __('Checkout', 'woo-express-checkout'),
@@ -48,13 +50,16 @@ class Product_Checkout
             'has_archive'  => false,
             'show_in_menu' => 'woocommerce',
             'supports'     => array('title', 'editor', 'thumbnail'),
-            'rewrite'      => array('slug' => 'checkout'),
+            'rewrite'      => array('slug' => $rewrite_slug),
         ));
 
-        // Resolve product checkout pages before the WooCommerce checkout page
-        // when both routes use the same /checkout/ URL base.
+        $endpoint_exclusions = 'checkout' === $rewrite_slug
+            ? '(?!order-received(?:/|$)|order-pay(?:/|$)|order-cancel(?:/|$)|view-order(?:/|$)|pay(?:/|$)|add-payment-method(?:/|$)|delete-payment-method(?:/|$)|set-default-payment-method(?:/|$))'
+            : '';
+
+        // Resolve product checkout pages before the standard page rewrite.
         add_rewrite_rule(
-            '^checkout/(?!order-received(?:/|$)|order-pay(?:/|$)|order-cancel(?:/|$)|view-order(?:/|$)|pay(?:/|$)|add-payment-method(?:/|$)|delete-payment-method(?:/|$)|set-default-payment-method(?:/|$))([^/]+)/?$',
+            '^' . preg_quote($rewrite_slug, '/') . '/' . $endpoint_exclusions . '([^/]+)/?$',
             'index.php?post_type=' . self::POST_TYPE . '&name=$matches[1]',
             'top'
         );
@@ -236,7 +241,7 @@ class Product_Checkout
      */
     private function maybe_flush_rewrite_rules()
     {
-        $slug = 'checkout';
+        $slug = $this->get_rewrite_slug();
         $version = defined('WEC_VERSION') ? WEC_VERSION : '1.0.0';
         if (
             $slug !== get_option('wec_product_checkout_rewrite_slug')
@@ -246,5 +251,11 @@ class Product_Checkout
             update_option('wec_product_checkout_rewrite_slug', $slug);
             update_option('wec_product_checkout_rewrite_version', $version);
         }
+    }
+
+    private function get_rewrite_slug()
+    {
+        $slug = sanitize_title(get_option('wec_product_checkout_url_slug', 'checkout'));
+        return $slug ? $slug : 'checkout';
     }
 }

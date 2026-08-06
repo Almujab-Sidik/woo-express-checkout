@@ -47,6 +47,13 @@ class Settings
         register_setting('wec_checkout_settings_group', 'wec_checkout_guest_enabled');
         register_setting('wec_checkout_settings_group', 'wec_checkout_layout_enabled');
         register_setting('wec_checkout_settings_group', 'wec_checkout_product_pages_enabled');
+        register_setting(
+            'wec_checkout_settings_group',
+            'wec_product_checkout_url_slug',
+            array(
+                'sanitize_callback' => array($this, 'sanitize_product_checkout_slug'),
+            )
+        );
 
         // Master module toggles default to off so every feature is opt-in.
         foreach (array('wec_module_checkout_enabled', 'wec_module_bundle_enabled', 'wec_module_coupon_enabled') as $option) {
@@ -68,6 +75,16 @@ class Settings
         if (false === get_option('wec_checkout_product_pages_enabled')) {
             update_option('wec_checkout_product_pages_enabled', 'no');
         }
+
+        if (false === get_option('wec_product_checkout_url_slug')) {
+            update_option('wec_product_checkout_url_slug', 'checkout');
+        }
+    }
+
+    public function sanitize_product_checkout_slug($value)
+    {
+        $slug = sanitize_title($value);
+        return $slug ? $slug : 'checkout';
     }
 
     public function render_page()
@@ -168,6 +185,24 @@ class Settings
                                             </a>
                                         </p>
                                     <?php endif; ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><?php esc_html_e('Product Checkout URL Slug', 'woo-express-checkout'); ?></th>
+                                <td>
+                                    <code><?php echo esc_html(trailingslashit(home_url())); ?></code>
+                                    <input
+                                        type="text"
+                                        name="wec_product_checkout_url_slug"
+                                        value="<?php echo esc_attr(get_option('wec_product_checkout_url_slug', 'checkout')); ?>"
+                                        class="regular-text"
+                                        placeholder="checkout"
+                                        pattern="[a-z0-9-]+"
+                                    />
+                                    <code>/example/</code>
+                                    <p class="description">
+                                        <?php esc_html_e('Controls the URL base for Product-Specific Checkout pages. Example: /checkout/example/. Change this if it conflicts with your WooCommerce checkout URL.', 'woo-express-checkout'); ?>
+                                    </p>
                                 </td>
                             </tr>
                         </table>
