@@ -51,6 +51,14 @@ class Product_Checkout
             'rewrite'      => array('slug' => 'checkout'),
         ));
 
+        // Resolve product checkout pages before the WooCommerce checkout page
+        // when both routes use the same /checkout/ URL base.
+        add_rewrite_rule(
+            '^checkout/([^/]+)/?$',
+            'index.php?post_type=' . self::POST_TYPE . '&name=$matches[1]',
+            'top'
+        );
+
         $this->maybe_enable_elementor_support();
         $this->maybe_flush_rewrite_rules();
     }
@@ -229,9 +237,14 @@ class Product_Checkout
     private function maybe_flush_rewrite_rules()
     {
         $slug = 'checkout';
-        if ($slug !== get_option('wec_product_checkout_rewrite_slug')) {
+        $version = defined('WEC_VERSION') ? WEC_VERSION : '1.0.0';
+        if (
+            $slug !== get_option('wec_product_checkout_rewrite_slug')
+            || $version !== get_option('wec_product_checkout_rewrite_version')
+        ) {
             flush_rewrite_rules();
             update_option('wec_product_checkout_rewrite_slug', $slug);
+            update_option('wec_product_checkout_rewrite_version', $version);
         }
     }
 }
