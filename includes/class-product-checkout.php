@@ -54,7 +54,7 @@ class Product_Checkout
         // Resolve product checkout pages before the WooCommerce checkout page
         // when both routes use the same /checkout/ URL base.
         add_rewrite_rule(
-            '^checkout/([^/]+)/?$',
+            '^checkout/(?!order-received(?:/|$)|order-pay(?:/|$)|order-cancel(?:/|$)|view-order(?:/|$)|pay(?:/|$)|add-payment-method(?:/|$)|delete-payment-method(?:/|$)|set-default-payment-method(?:/|$))([^/]+)/?$',
             'index.php?post_type=' . self::POST_TYPE . '&name=$matches[1]',
             'top'
         );
