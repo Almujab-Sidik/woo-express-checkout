@@ -131,6 +131,10 @@ class Plugin
 
     public function enqueue_assets()
     {
+        if ( function_exists( 'is_account_page' ) && is_account_page() && isset( $_GET['action'] ) && 'rp' === sanitize_key( wp_unslash( $_GET['action'] ) ) ) {
+            wp_enqueue_style( 'wec-account', WEC_URL . 'assets/css/account.css', array(), WEC_VERSION );
+        }
+
         if (function_exists('is_checkout') && is_checkout() && ! is_wc_endpoint_url('order-received')) {
             wp_enqueue_style(
                 'wec-font-inter',

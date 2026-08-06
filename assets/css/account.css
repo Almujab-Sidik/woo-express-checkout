@@ -1,0 +1,107 @@
+.wec-reset-password-page {
+	box-sizing: border-box;
+	display: flex;
+	justify-content: center;
+	padding: 64px 24px;
+	background: #f7f7f8;
+}
+
+.wec-reset-password-card {
+	box-sizing: border-box;
+	width: min(100%, 520px);
+	padding: 40px;
+	border: 1px solid #e5e7eb;
+	border-radius: 16px;
+	background: #ffffff;
+	box-shadow: 0 16px 40px rgba(17, 24, 39, 0.08);
+}
+
+.wec-reset-password-brand {
+	margin: 0 0 28px;
+	color: #111827;
+	font-size: 18px;
+	font-weight: 700;
+}
+
+.wec-reset-password-card h1 {
+	margin: 0 0 12px;
+	color: #111827;
+	font-size: clamp(28px, 5vw, 40px);
+	line-height: 1.1;
+}
+
+.wec-reset-password-intro,
+.wec-reset-password-help {
+	color: #6b7280;
+	line-height: 1.6;
+}
+
+.wec-reset-password-form {
+	display: grid;
+	gap: 10px;
+	margin-top: 28px;
+}
+
+.wec-reset-password-form label {
+	color: #374151;
+	font-size: 14px;
+	font-weight: 600;
+}
+
+.wec-reset-password-form input[type="password"] {
+	box-sizing: border-box;
+	width: 100%;
+	padding: 13px 14px;
+	border: 1px solid #d1d5db;
+	border-radius: 8px;
+	font-size: 16px;
+}
+
+.wec-reset-password-form input[type="password"]:focus {
+	border-color: #7f54b3;
+	box-shadow: 0 0 0 3px rgba(127, 84, 179, 0.14);
+	outline: none;
+}
+
+.wec-reset-password-help {
+	margin: 0;
+	font-size: 13px;
+}
+
+.wec-reset-password-form button {
+	margin-top: 10px;
+	padding: 14px 20px;
+	border: 0;
+	border-radius: 8px;
+	background: #7f54b3;
+	color: #ffffff;
+	font-size: 15px;
+	font-weight: 700;
+	cursor: pointer;
+}
+
+.wec-reset-password-form button:hover {
+	background: #68429a;
+}
+
+.wec-reset-password-notice {
+	margin: 20px 0 0;
+	padding: 14px 16px;
+	border-radius: 8px;
+	line-height: 1.5;
+}
+
+.wec-reset-password-error {
+	background: #fef2f2;
+	color: #991b1b;
+}
+
+@media (max-width: 600px) {
+	.wec-reset-password-page {
+		padding: 32px 16px;
+	}
+
+	.wec-reset-password-card {
+		padding: 28px 22px;
+	}
+}

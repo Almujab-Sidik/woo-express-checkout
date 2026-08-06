@@ -65,7 +65,7 @@ class Auto_Account {
 
 		$password = wp_generate_password( 24, true, true );
 
-		// Suppress email "new account" bawaan WC — kita kirim email custom.
+		// Suppress WooCommerce's default new-account email; the custom email is sent below.
 		add_filter( 'woocommerce_email_enabled_customer_new_account', '__return_false' );
 
 		try {

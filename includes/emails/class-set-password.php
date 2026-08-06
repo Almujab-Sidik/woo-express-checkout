@@ -33,6 +33,10 @@ class Set_Password extends \WC_Email {
 		$this->template_plain = 'emails/plain/wec-set-password.php';
 		$this->template_base  = WEC_PATH . 'templates/';
 
+		add_action( 'login_init', array( $this, 'redirect_native_reset_screen' ) );
+		add_filter( 'template_include', array( $this, 'load_reset_template' ), 99 );
+		add_action( 'template_redirect', array( $this, 'process_reset_request' ), 1 );
+
 		parent::__construct();
 	}
 
@@ -51,14 +55,17 @@ class Set_Password extends \WC_Email {
 			return;
 		}
 
-		// Use WordPress's native password reset flow instead of a custom token.
+		// Keep WordPress's secure reset key while presenting the form on My Account.
+		$account_url = function_exists( 'wc_get_page_permalink' )
+			? wc_get_page_permalink( 'myaccount' )
+			: home_url( '/' );
 		$reset_url = add_query_arg(
 			array(
 				'action' => 'rp',
 				'key'    => $key,
 				'login'  => rawurlencode( $user->user_login ),
 			),
-			wp_login_url()
+			$account_url
 		);
 
 		$this->object    = $user;
@@ -71,6 +78,92 @@ class Set_Password extends \WC_Email {
 		}
 
 		$this->restore_locale();
+	}
+
+	public function redirect_native_reset_screen() {
+		if ( empty( $_GET['action'] ) || 'rp' !== sanitize_key( wp_unslash( $_GET['action'] ) ) ) {
+			return;
+		}
+
+		$account_url = function_exists( 'wc_get_page_permalink' )
+			? wc_get_page_permalink( 'myaccount' )
+			: home_url( '/' );
+		$args = array(
+			'action' => 'rp',
+			'key'    => isset( $_GET['key'] ) ? sanitize_text_field( wp_unslash( $_GET['key'] ) ) : '',
+			'login'  => isset( $_GET['login'] ) ? sanitize_text_field( wp_unslash( $_GET['login'] ) ) : '',
+		);
+
+		wp_safe_redirect( add_query_arg( $args, $account_url ) );
+		exit;
+	}
+
+	public function load_reset_template( $template ) {
+		if ( ! $this->is_account_reset_request() ) {
+			return $template;
+		}
+
+		$custom_template = WEC_PATH . 'templates/account/reset-password.php';
+		return file_exists( $custom_template ) ? $custom_template : $template;
+	}
+
+	public function process_reset_request() {
+		if ( ! $this->is_account_reset_request() || 'POST' !== $_SERVER['REQUEST_METHOD'] ) {
+			return;
+		}
+
+		if ( ! isset( $_POST['wec_reset_password_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['wec_reset_password_nonce'] ) ), 'wec_reset_password' ) ) {
+			wp_die( esc_html__( 'The password reset request could not be verified.', 'woo-express-checkout' ) );
+		}
+
+		$key      = isset( $_POST['key'] ) ? sanitize_text_field( wp_unslash( $_POST['key'] ) ) : '';
+		$login    = isset( $_POST['login'] ) ? sanitize_text_field( wp_unslash( $_POST['login'] ) ) : '';
+		$password = isset( $_POST['password'] ) ? (string) wp_unslash( $_POST['password'] ) : '';
+		$user     = check_password_reset_key( $key, $login );
+
+		if ( is_wp_error( $user ) ) {
+			$this->redirect_with_reset_error( $key, $login, 'invalid' );
+		}
+
+		if ( strlen( $password ) < 8 ) {
+			$this->redirect_with_reset_error( $key, $login, 'length' );
+		}
+
+		reset_password( $user, $password );
+		wp_set_current_user( $user->ID );
+		wp_set_auth_cookie( $user->ID, true );
+
+		$account_url = function_exists( 'wc_get_page_permalink' )
+			? wc_get_page_permalink( 'myaccount' )
+			: home_url( '/' );
+		wp_safe_redirect( $account_url );
+		exit;
+	}
+
+	private function is_account_reset_request() {
+		if ( empty( $_GET['action'] ) || 'rp' !== sanitize_key( wp_unslash( $_GET['action'] ) ) ) {
+			return false;
+		}
+
+		$account_page_id = function_exists( 'wc_get_page_id' ) ? wc_get_page_id( 'myaccount' ) : 0;
+		return $account_page_id > 0 && is_page( $account_page_id );
+	}
+
+	private function redirect_with_reset_error( $key, $login, $error ) {
+		$account_url = function_exists( 'wc_get_page_permalink' )
+			? wc_get_page_permalink( 'myaccount' )
+			: home_url( '/' );
+		$url = add_query_arg(
+			array(
+				'action' => 'rp',
+				'key'    => $key,
+				'login'  => $login,
+				'error'  => $error,
+			),
+			$account_url
+		);
+		wp_safe_redirect( $url );
+		exit;
 	}
 
 	public function get_content_html() {
