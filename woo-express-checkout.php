@@ -4,7 +4,7 @@
  * Plugin Name: WooCommerce Express Checkout
  * Plugin URI:  https://era.ai/woo-express-checkout
  * Description: Pengalaman checkout ala Shopify untuk WooCommerce — guest checkout cepat, field minimal, bundle offer, dan auto account creation.
- * Version:     0.1.2
+ * Version:     0.1.3
  * Author:      Era AI
  * Text Domain: woo-express-checkout
  * Domain Path: /languages
@@ -22,7 +22,7 @@ if (! defined('ABSPATH')) {
     exit;
 }
 
-define('WEC_VERSION', '0.1.2');
+define('WEC_VERSION', '0.1.3');
 define('WEC_FILE', __FILE__);
 define('WEC_PATH', plugin_dir_path(__FILE__));
 define('WEC_URL', plugin_dir_url(__FILE__));
@@ -34,9 +34,13 @@ define('WEC_BASENAME', plugin_basename(__FILE__));
 // bukan hard-code di sini, supaya token tidak ikut ter-commit ke repo.
 require_once WEC_PATH . 'includes/plugin-update-checker/plugin-update-checker.php';
 
-if (defined('WEC_GITHUB_REPO') && WEC_GITHUB_REPO) {
+$wec_github_repo = defined('WEC_GITHUB_REPO') && WEC_GITHUB_REPO
+    ? WEC_GITHUB_REPO
+    : 'https://github.com/Almujab-Sidik/woo-express-checkout/';
+
+if ($wec_github_repo) {
     $wec_update_checker = \YahnisElsts\PluginUpdateChecker\v5\PucFactory::buildUpdateChecker(
-        WEC_GITHUB_REPO,
+        $wec_github_repo,
         WEC_FILE,
         'woo-express-checkout'
     );

@@ -150,9 +150,11 @@ class Upsell_Bundle_Order_Bump {
 			$main_id = $bump['main_product_id'];
 			$bump_id = $bump['bump_product_id'];
 
-			$original_price   = (float) $bump_product->get_price();
+			$base_price       = (float) $bump_product->get_price();
+			$original_price   = (float) $bump_product->get_regular_price();
+			$original_price   = $original_price > 0 ? max( $original_price, $base_price ) : $base_price;
 			$discount_percent = min( 100, max( 0, (float) $bump['discount_percent'] ) );
-			$bump_price       = $original_price * ( 1 - ( $discount_percent / 100 ) );
+			$bump_price       = $base_price * ( 1 - ( $discount_percent / 100 ) );
 			$display_title  = ! empty( $bump['title'] ) ? $bump['title'] : $bump_product->get_title();
 
 			$checked = $this->is_bump_in_cart( $bump_id, $main_id );
