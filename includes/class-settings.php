@@ -79,6 +79,18 @@ class Settings
         if (false === get_option('wec_product_checkout_url_slug')) {
             update_option('wec_product_checkout_url_slug', 'checkout');
         }
+
+        // WA Reminder settings
+        register_setting('wec_wa_reminder_group', 'wec_wa_reminder_enabled');
+        register_setting('wec_wa_reminder_group', 'wec_starsender_api_key');
+        register_setting('wec_wa_reminder_group', 'wec_wa_reminder_delay');
+
+        if (false === get_option('wec_wa_reminder_enabled')) {
+            update_option('wec_wa_reminder_enabled', 'no');
+        }
+        if (false === get_option('wec_wa_reminder_delay')) {
+            update_option('wec_wa_reminder_delay', '120');
+        }
     }
 
     public function sanitize_product_checkout_slug($value)
@@ -92,7 +104,7 @@ class Settings
         $checkout_on = 'yes' === get_option('wec_module_checkout_enabled', 'no');
         $bundle_on   = 'yes' === get_option('wec_module_bundle_enabled', 'no');
         $coupon_on   = 'yes' === get_option('wec_module_coupon_enabled', 'no');
-        ?>
+?>
         <div class="wrap wec-settings-wrap">
             <h1><?php esc_html_e('WooCommerce Express Checkout', 'woo-express-checkout'); ?></h1>
             <p class="description">
@@ -197,8 +209,7 @@ class Settings
                                         value="<?php echo esc_attr(get_option('wec_product_checkout_url_slug', 'checkout')); ?>"
                                         class="regular-text"
                                         placeholder="checkout"
-                                        pattern="[a-z0-9-]+"
-                                    />
+                                        pattern="[a-z0-9-]+" />
                                     <code>/example/</code>
                                     <p class="description">
                                         <?php esc_html_e('Controls the URL base for Product-Specific Checkout pages. Example: /checkout/example/. Change this if it conflicts with your WooCommerce checkout URL.', 'woo-express-checkout'); ?>
@@ -223,7 +234,41 @@ class Settings
                     <?php \WCDM_Settings::get_instance()->render_submenu_page(); ?>
                 </div>
             <?php endif; ?>
+
+            <!-- WA Payment Reminder Settings -->
+            <div class="card" style="max-width: 100%; margin-top: 16px;">
+                <h2><?php esc_html_e('WA Payment Reminder', 'woo-express-checkout'); ?></h2>
+                <form method="post" action="options.php">
+                    <?php settings_fields('wec_wa_reminder_group'); ?>
+                    <table class="form-table" role="presentation">
+                        <tr>
+                            <th scope="row"><?php esc_html_e('Enable Reminder', 'woo-express-checkout'); ?></th>
+                            <td>
+                                <label>
+                                    <input type="checkbox" name="wec_wa_reminder_enabled" value="yes" <?php checked('yes' === get_option('wec_wa_reminder_enabled', 'no')); ?> />
+                                    <?php esc_html_e('Send WhatsApp reminder when order is on-hold (Midtrans pending).', 'woo-express-checkout'); ?>
+                                </label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><?php esc_html_e('Star Sender API Key', 'woo-express-checkout'); ?></th>
+                            <td>
+                                <input type="text" name="wec_starsender_api_key" value="<?php echo esc_attr(get_option('wec_starsender_api_key', '')); ?>" class="regular-text" />
+                                <p class="description"><?php esc_html_e('Get your API key from Star Sender Device menu.', 'woo-express-checkout'); ?></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><?php esc_html_e('Delay (seconds)', 'woo-express-checkout'); ?></th>
+                            <td>
+                                <input type="number" name="wec_wa_reminder_delay" value="<?php echo esc_attr(get_option('wec_wa_reminder_delay', 120)); ?>" min="0" max="3600" />
+                                <p class="description"><?php esc_html_e('Delay before sending reminder (120 = 2 minutes).', 'woo-express-checkout'); ?></p>
+                            </td>
+                        </tr>
+                    </table>
+                    <?php submit_button(__('Save WA Reminder Settings', 'woo-express-checkout')); ?>
+                </form>
+            </div>
         </div>
-        <?php
+<?php
     }
 }
