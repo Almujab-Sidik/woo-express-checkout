@@ -36,11 +36,10 @@ class WA_Reminder
 
     private function register_hooks()
     {
-        // Hook to order status change
+        // Hook to order status change - multiple hooks for compatibility
         add_action('woocommerce_order_status_on-hold', array($this, 'send_reminder'), 20, 2);
-
-        // Also check for pending status (some Midtrans configurations)
         add_action('woocommerce_order_status_pending', array($this, 'send_reminder'), 20, 2);
+        add_action('woocommerce_order_status_changed', array($this, 'send_reminder_on_change'), 20, 3);
     }
 
     /**
@@ -53,31 +52,40 @@ class WA_Reminder
         }
 
         if (! $order) {
+            $this->log('Order not found: ' . $order_id);
             return;
         }
 
         // Only for Midtrans payment method
         $payment_method = $order->get_payment_method();
+        $this->log('Payment method: ' . $payment_method . ' for order #' . $order_id);
+
         if (strpos($payment_method, 'midtrans') === false) {
+            $this->log('Not a Midtrans order, skipping');
             return;
         }
 
         // Check if already sent
         if ($order->get_meta('_wec_wa_reminder_sent')) {
+            $this->log('Already sent for order #' . $order_id);
             return;
         }
 
         // Get payment URL
         $payment_url = $this->get_payment_url($order);
         if (empty($payment_url)) {
+            $this->log('No payment URL for order #' . $order_id);
             return;
         }
+        $this->log('Payment URL: ' . $payment_url);
 
         // Get phone number
         $phone = $order->get_billing_phone();
         if (empty($phone)) {
+            $this->log('No phone for order #' . $order_id);
             return;
         }
+        $this->log('Phone: ' . $phone);
 
         // Build message
         $message = $this->build_message($order, $payment_url);
@@ -85,17 +93,43 @@ class WA_Reminder
         // Get delay setting (default 120 seconds = 2 minutes)
         $delay = intval(get_option('wec_wa_reminder_delay', 120));
 
+        $this->log('Sending WA with delay: ' . $delay . ' seconds');
+
         // Send via Star Sender
         $result = $this->api->send_message($phone, $message, $delay);
 
         if (is_wp_error($result)) {
+            $this->log('Error: ' . $result->get_error_message());
             $order->add_order_note(
                 sprintf(__('WA reminder failed: %s', 'woo-express-checkout'), $result->get_error_message())
             );
         } else {
+            $this->log('Success: ' . print_r($result, true));
             $order->update_meta_data('_wec_wa_reminder_sent', current_time('mysql'));
             $order->add_order_note(__('WA payment reminder sent.', 'woo-express-checkout'));
             $order->save();
+        }
+    }
+
+    /**
+     * Alternative hook for order status changed.
+     */
+    public function send_reminder_on_change($order_id, $old_status, $new_status)
+    {
+        $this->log("Status changed: {$old_status} -> {$new_status} for order #{$order_id}");
+
+        if (in_array($new_status, array('on-hold', 'pending'))) {
+            $this->send_reminder($order_id);
+        }
+    }
+
+    /**
+     * Debug log.
+     */
+    private function log($message)
+    {
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+            error_log('[WEC WA Reminder] ' . $message);
         }
     }
 
@@ -169,15 +203,15 @@ Salam Hangat,
             return;
         }
 ?>
-    <div class="notice notice-warning">
-        <p>
-            <strong><?php esc_html_e('WooCommerce Express Checkout', 'woo-express-checkout'); ?></strong> &mdash;
-            <?php esc_html_e('Star Sender API key is required for WA Payment Reminder.', 'woo-express-checkout'); ?>
-            <a href="<?php echo esc_url(admin_url('admin.php?page=wec-express-checkout')); ?>">
-                <?php esc_html_e('Configure now', 'woo-express-checkout'); ?>
-            </a>
-        </p>
-    </div>
+        <div class="notice notice-warning">
+            <p>
+                <strong><?php esc_html_e('WooCommerce Express Checkout', 'woo-express-checkout'); ?></strong> &mdash;
+                <?php esc_html_e('Star Sender API key is required for WA Payment Reminder.', 'woo-express-checkout'); ?>
+                <a href="<?php echo esc_url(admin_url('admin.php?page=wec-express-checkout')); ?>">
+                    <?php esc_html_e('Configure now', 'woo-express-checkout'); ?>
+                </a>
+            </p>
+        </div>
 <?php
     }
 }
