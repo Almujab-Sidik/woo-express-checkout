@@ -171,6 +171,12 @@ class WA_Reminder
             $items[] = $item->get_name() . ' x' . $item->get_quantity();
         }
         $order_items = implode(', ', $items);
+        $formatted_total = html_entity_decode(
+            wp_strip_all_tags($order->get_formatted_order_total()),
+            ENT_QUOTES,
+            get_bloginfo('charset') ?: 'UTF-8'
+        );
+        $formatted_total = trim(preg_replace('/\\s+/', ' ', $formatted_total));
 
         $message = "Halo {$order->get_billing_first_name()},
 
@@ -182,7 +188,7 @@ Order ID: *{$order->get_order_number()}*
 Tanggal: *{$order->get_date_created()->date('F j, Y')}*
 Status: *{$order->get_status()}*
 Produk: *{$order_items}*
-Total: *{$order->get_formatted_order_total()}*
+Total: *{$formatted_total}*
 
 Silakan lanjutkan pembayaran melalui link berikut:
 {$payment_url}
