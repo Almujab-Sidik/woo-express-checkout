@@ -18,7 +18,16 @@ class StarSender_API
 
     public function __construct($api_key = '')
     {
-        $this->api_key = $api_key ?: get_option('wec_starsender_api_key', '');
+        $api_key = $api_key ?: get_option('wec_starsender_api_key', '');
+        $api_key = trim((string) $api_key);
+
+        // Star Sender documentation expects the device API key itself,
+        // not an additional "Bearer " prefix.
+        if (0 === stripos($api_key, 'Bearer ')) {
+            $api_key = trim(substr($api_key, 7));
+        }
+
+        $this->api_key = $api_key;
     }
 
     /**

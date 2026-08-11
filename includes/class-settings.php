@@ -82,8 +82,20 @@ class Settings
 
         // WA Reminder settings
         register_setting('wec_wa_reminder_group', 'wec_wa_reminder_enabled');
-        register_setting('wec_wa_reminder_group', 'wec_starsender_api_key');
-        register_setting('wec_wa_reminder_group', 'wec_wa_reminder_delay');
+        register_setting(
+            'wec_wa_reminder_group',
+            'wec_starsender_api_key',
+            array(
+                'sanitize_callback' => 'sanitize_text_field',
+            )
+        );
+        register_setting(
+            'wec_wa_reminder_group',
+            'wec_wa_reminder_delay',
+            array(
+                'sanitize_callback' => 'absint',
+            )
+        );
 
         if (false === get_option('wec_wa_reminder_enabled')) {
             update_option('wec_wa_reminder_enabled', 'no');

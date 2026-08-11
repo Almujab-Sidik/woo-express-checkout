@@ -36,9 +36,9 @@ class WA_Reminder
 
     private function register_hooks()
     {
-        // Hook to order status change - multiple hooks for compatibility
-        add_action('woocommerce_order_status_on-hold', array($this, 'send_reminder'), 20, 2);
-        add_action('woocommerce_order_status_pending', array($this, 'send_reminder'), 20, 2);
+        // Process once, only when the order transitions to on-hold.
+        // Midtrans commonly transitions pending -> on-hold, so listening to
+        // both status-specific hooks caused duplicate API requests.
         add_action('woocommerce_order_status_changed', array($this, 'send_reminder_on_change'), 20, 3);
     }
 
@@ -121,7 +121,7 @@ class WA_Reminder
     {
         $this->log("Status changed: {$old_status} -> {$new_status} for order #{$order_id}");
 
-        if (in_array($new_status, array('on-hold', 'pending'))) {
+        if ('on-hold' === $new_status) {
             $this->send_reminder($order_id);
         }
     }
