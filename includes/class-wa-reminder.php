@@ -36,10 +36,17 @@ class WA_Reminder
 
     private function register_hooks()
     {
-        // Process once when the order transitions to pending. Midtrans may
-        // later change the order from pending to on-hold; the sent meta
-        // prevents a second reminder for that transition.
+        // Process when the order transitions to pending. Midtrans may later
+        // change the order from pending to on-hold; the sent meta prevents a
+        // second reminder for that transition.
         add_action('woocommerce_order_status_changed', array($this, 'send_reminder_on_change'), 20, 3);
+
+        // A new WooCommerce order can already have the initial pending status,
+        // so no status-change hook is fired. Schedule a delayed check to allow
+        // Midtrans to save _mt_payment_url after process_payment().
+        add_action('woocommerce_new_order', array($this, 'schedule_pending_reminder'), 20, 1);
+        add_action('woocommerce_checkout_order_processed', array($this, 'schedule_pending_reminder'), 20, 1);
+        add_action('wec_send_pending_reminder', array($this, 'send_scheduled_reminder'), 10, 1);
     }
 
     /**
@@ -112,6 +119,34 @@ class WA_Reminder
 
         // Persist the note/meta even when the Midtrans webhook terminates the request.
         $order->save();
+    }
+
+    /**
+     * Schedule a check after the checkout/payment process has saved Midtrans
+     * metadata on the order.
+     */
+    public function schedule_pending_reminder($order_id)
+    {
+        $order_id = absint($order_id);
+        if (! $order_id || wp_next_scheduled('wec_send_pending_reminder', array($order_id))) {
+            return;
+        }
+
+        wp_schedule_single_event(time() + 15, 'wec_send_pending_reminder', array($order_id));
+        $this->log('Scheduled pending reminder for order #' . $order_id);
+    }
+
+    /**
+     * Send the scheduled reminder only if the order is still pending.
+     */
+    public function send_scheduled_reminder($order_id)
+    {
+        $order = wc_get_order($order_id);
+        if (! $order || 'pending' !== $order->get_status()) {
+            return;
+        }
+
+        $this->send_reminder($order_id, $order);
     }
 
     /**
