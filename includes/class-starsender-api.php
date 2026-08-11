@@ -54,7 +54,7 @@ class StarSender_API
                 'Content-Type'  => 'application/json',
                 'Authorization' => $this->api_key,
             ),
-            'body'    => json_encode($body),
+            'body'    => wp_json_encode($body),
             'timeout' => 30,
         );
 
@@ -64,20 +64,27 @@ class StarSender_API
             return $response;
         }
 
-        $response_code = wp_remote_retrieve_response_code($response);
-        $response_body = json_decode(wp_remote_retrieve_body($response), true);
+        $response_code = (int) wp_remote_retrieve_response_code($response);
+        $raw_body     = wp_remote_retrieve_body($response);
+        $response_body = json_decode($raw_body, true);
 
-        if ($response_code !== 200) {
+        // Star Sender may return any successful 2xx response, not only 200.
+        if ($response_code < 200 || $response_code >= 300) {
+            $message = is_array($response_body) && ! empty($response_body['message'])
+                ? $response_body['message']
+                : ($raw_body ?: 'Unknown error');
+
             return new \WP_Error(
                 'api_error',
                 sprintf(
-                    __('Star Sender API error: %s', 'woo-express-checkout'),
-                    isset($response_body['message']) ? $response_body['message'] : 'Unknown error'
+                    __('Star Sender API error (HTTP %1$d): %2$s', 'woo-express-checkout'),
+                    $response_code,
+                    $message
                 )
             );
         }
 
-        return $response_body;
+        return is_array($response_body) ? $response_body : array('raw_response' => $raw_body);
     }
 
     /**

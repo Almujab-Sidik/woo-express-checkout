@@ -60,7 +60,7 @@ class WA_Reminder
         $payment_method = $order->get_payment_method();
         $this->log('Payment method: ' . $payment_method . ' for order #' . $order_id);
 
-        if (strpos($payment_method, 'midtrans') === false) {
+        if (false === strpos(strtolower((string) $payment_method), 'midtrans')) {
             $this->log('Not a Midtrans order, skipping');
             return;
         }
@@ -99,16 +99,19 @@ class WA_Reminder
         $result = $this->api->send_message($phone, $message, $delay);
 
         if (is_wp_error($result)) {
-            $this->log('Error: ' . $result->get_error_message());
+            $error = $result->get_error_message();
+            $this->log('Error: ' . $error);
             $order->add_order_note(
-                sprintf(__('WA reminder failed: %s', 'woo-express-checkout'), $result->get_error_message())
+                sprintf(__('WA reminder failed: %s', 'woo-express-checkout'), $error)
             );
         } else {
             $this->log('Success: ' . print_r($result, true));
             $order->update_meta_data('_wec_wa_reminder_sent', current_time('mysql'));
-            $order->add_order_note(__('WA payment reminder sent.', 'woo-express-checkout'));
-            $order->save();
+            $order->add_order_note(__('WA payment reminder accepted by Star Sender API.', 'woo-express-checkout'));
         }
+
+        // Persist the note/meta even when the Midtrans webhook terminates the request.
+        $order->save();
     }
 
     /**
