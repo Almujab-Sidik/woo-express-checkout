@@ -178,29 +178,60 @@ class WA_Reminder
         );
         $formatted_total = trim(preg_replace('/\\s+/', ' ', $formatted_total));
 
-        $message = "Halo {$order->get_billing_first_name()},
+        $billing_name = trim($order->get_billing_first_name() . ' ' . $order->get_billing_last_name());
+        $shipping_name = trim($order->get_shipping_first_name() . ' ' . $order->get_shipping_last_name());
+        $billing_address = $this->format_address($order, 'billing');
+        $shipping_address = $this->format_address($order, 'shipping');
+        $date_created = $order->get_date_created();
 
-_(Mohon abaikan pesan ini jika bukan Anda yang melakukan pemesanan)_
+        $placeholders = array(
+            '%site_name%'        => get_bloginfo('name'),
+            '%order_id%'         => $order->get_order_number(),
+            '%order_date%'       => $date_created ? $date_created->date_i18n('F j, Y') : '',
+            '%order_status%'     => wc_get_order_status_name($order->get_status()),
+            '%order_items%'      => $order_items,
+            '%order_total%'      => $formatted_total,
+            '%payment_url%'      => $payment_url,
+            '%billing_name%'     => $billing_name,
+            '%billing_email%'    => $order->get_billing_email(),
+            '%billing_phone%'    => $order->get_billing_phone(),
+            '%billing_address%'  => $billing_address,
+            '%shipping_name%'    => $shipping_name,
+            '%shipping_address%' => $shipping_address,
+        );
 
-Terimakasih untuk pemesanan Anda:
+        $template = get_option('wec_wa_reminder_template', '');
+        if ('' === trim($template)) {
+            $template = $this->get_default_template();
+        }
 
-Order ID: *{$order->get_order_number()}*
-Tanggal: *{$order->get_date_created()->date('F j, Y')}*
-Status: *{$order->get_status()}*
-Produk: *{$order_items}*
-Total: *{$formatted_total}*
+        return strtr($template, $placeholders);
+    }
 
-Silakan lanjutkan pembayaran melalui link berikut:
-{$payment_url}
+    /**
+     * Format billing or shipping address for a plain-text message.
+     */
+    private function format_address($order, $type)
+    {
+        $get = 'billing' === $type ? 'get_billing_' : 'get_shipping_';
+        $parts = array(
+            $order->{$get . 'address_1'}(),
+            $order->{$get . 'address_2'}(),
+            $order->{$get . 'city'}(),
+            $order->{$get . 'state'}(),
+            $order->{$get . 'postcode'}(),
+            $order->{$get . 'country'}(),
+        );
 
-Link pembayaran berlaku 24 jam.
+        return implode(', ', array_filter(array_map('trim', $parts)));
+    }
 
-Terimakasih banyak sudah berbelanja di website kami.
-
-Salam Hangat,
-{$site_name}";
-
-        return $message;
+    /**
+     * Default template used when the setting is empty.
+     */
+    private function get_default_template()
+    {
+        return "Halo %billing_name%,\n\n_(Mohon abaikan pesan ini jika bukan Anda yang melakukan pemesanan)_\n\nTerimakasih untuk pemesanan Anda:\n\nOrder ID: *%order_id%*\nTanggal: *%order_date%*\nStatus: *%order_status%*\nProduk: *%order_items%*\nTotal: *%order_total%*\n\nSilakan lanjutkan pembayaran melalui link berikut:\n%payment_url%\n\nLink pembayaran berlaku 24 jam.\n\nTerimakasih banyak sudah berbelanja di website kami.\n\nSalam Hangat,\n%site_name%";
     }
 
     /**

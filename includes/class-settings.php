@@ -96,6 +96,13 @@ class Settings
                 'sanitize_callback' => 'absint',
             )
         );
+        register_setting(
+            'wec_wa_reminder_group',
+            'wec_wa_reminder_template',
+            array(
+                'sanitize_callback' => 'sanitize_textarea_field',
+            )
+        );
 
         if (false === get_option('wec_wa_reminder_enabled')) {
             update_option('wec_wa_reminder_enabled', 'no');
@@ -103,12 +110,20 @@ class Settings
         if (false === get_option('wec_wa_reminder_delay')) {
             update_option('wec_wa_reminder_delay', '120');
         }
+        if (false === get_option('wec_wa_reminder_template')) {
+            update_option('wec_wa_reminder_template', $this->get_default_wa_template());
+        }
     }
 
     public function sanitize_product_checkout_slug($value)
     {
         $slug = sanitize_title($value);
         return $slug ? $slug : 'checkout';
+    }
+
+    private function get_default_wa_template()
+    {
+        return "Halo %billing_name%,\n\n_(Mohon abaikan pesan ini jika bukan Anda yang melakukan pemesanan)_\n\nTerimakasih untuk pemesanan Anda:\n\nOrder ID: *%order_id%*\nTanggal: *%order_date%*\nStatus: *%order_status%*\nProduk: *%order_items%*\nTotal: *%order_total%*\n\nSilakan lanjutkan pembayaran melalui link berikut:\n%payment_url%\n\nLink pembayaran berlaku 24 jam.\n\nTerimakasih banyak sudah berbelanja di website kami.\n\nSalam Hangat,\n%site_name%";
     }
 
     public function render_page()
@@ -274,6 +289,15 @@ class Settings
                             <td>
                                 <input type="number" name="wec_wa_reminder_delay" value="<?php echo esc_attr(get_option('wec_wa_reminder_delay', 120)); ?>" min="0" max="3600" />
                                 <p class="description"><?php esc_html_e('Delay before sending reminder (120 = 2 minutes).', 'woo-express-checkout'); ?></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><?php esc_html_e('Message Template', 'woo-express-checkout'); ?></th>
+                            <td>
+                                <textarea name="wec_wa_reminder_template" rows="18" class="large-text code"><?php echo esc_textarea(get_option('wec_wa_reminder_template', $this->get_default_wa_template())); ?></textarea>
+                                <p class="description">
+                                    <?php esc_html_e('Use placeholders such as %billing_name%, %order_id%, %order_date%, %order_status%, %order_items%, %order_total%, %payment_url%, and %site_name%.', 'woo-express-checkout'); ?>
+                                </p>
                             </td>
                         </tr>
                     </table>
