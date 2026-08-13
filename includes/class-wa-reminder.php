@@ -36,14 +36,12 @@ class WA_Reminder
 
     private function register_hooks()
     {
-        // Process when the order transitions to pending. Midtrans may later
-        // change the order from pending to on-hold; the sent meta prevents a
-        // second reminder for that transition.
+        // Process when the order transitions to on-hold. The sent meta
+        // prevents duplicate reminders if WooCommerce fires related hooks.
         add_action('woocommerce_order_status_changed', array($this, 'send_reminder_on_change'), 20, 3);
 
-        // A new WooCommerce order can already have the initial pending status,
-        // so no status-change hook is fired. Schedule a delayed check to allow
-        // Midtrans to save _mt_payment_url after process_payment().
+        // A new order may be created before Midtrans saves its payment URL.
+        // Schedule a delayed check for the on-hold status and payment metadata.
         add_action('woocommerce_new_order', array($this, 'schedule_pending_reminder'), 20, 1);
         add_action('woocommerce_checkout_order_processed', array($this, 'schedule_pending_reminder'), 20, 1);
         add_action('wec_send_pending_reminder', array($this, 'send_scheduled_reminder'), 10, 1);
@@ -137,12 +135,12 @@ class WA_Reminder
     }
 
     /**
-     * Send the scheduled reminder only if the order is still pending.
+     * Send the scheduled reminder only if the order is on-hold.
      */
     public function send_scheduled_reminder($order_id)
     {
         $order = wc_get_order($order_id);
-        if (! $order || 'pending' !== $order->get_status()) {
+        if (! $order || 'on-hold' !== $order->get_status()) {
             return;
         }
 
@@ -156,7 +154,7 @@ class WA_Reminder
     {
         $this->log("Status changed: {$old_status} -> {$new_status} for order #{$order_id}");
 
-        if ('pending' === $new_status) {
+        if ('on-hold' === $new_status) {
             $this->send_reminder($order_id);
         }
     }
