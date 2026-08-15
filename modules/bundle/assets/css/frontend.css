@@ -134,17 +134,20 @@
    ========================================================================== */
 .upsell-bundle-checkout-bumps {
 	background: #ffffff !important;
-	border: none !important;
-	border-top: 1px solid var(--border) !important;
-	border-radius: 0 !important;
-	padding: 20px 0 0 !important;
+	border: 1px solid var(--border) !important;
+	border-radius: var(--radius-lg) !important;
+	padding: 16px !important;
 	margin: 20px 0 0 !important;
-	box-shadow: none !important;
+	box-shadow: var(--shadow-sm) !important;
 	font-family: inherit;
+	display: grid !important;
+	grid-template-columns: repeat(3, 1fr) !important;
+	gap: 12px !important;
 }
 
 .upsell-bundle-checkout-bumps h4 {
-	margin: 0 0 14px 0 !important;
+	grid-column: 1 / -1 !important;
+	margin: 0 0 2px 0 !important;
 	font-size: 14px !important;
 	font-weight: 600 !important;
 	color: var(--foreground) !important;
@@ -161,24 +164,29 @@
 
 .upsell-bundle-bump-card {
 	display: flex !important;
+	flex-direction: column !important;
 	align-items: flex-start !important;
 	background: #ffffff !important;
-	border: none !important;
-	border-radius: 0 !important;
-	padding: 14px 0 !important;
-	border-bottom: 1px solid var(--border) !important;
-	transition: background-color 0.15s ease-in-out !important;
+	border: 1px solid var(--border) !important;
+	border-radius: var(--radius) !important;
+	padding: 14px !important;
+	transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out !important;
 	position: relative !important;
 	margin-bottom: 0 !important;
-	box-shadow: none !important;
+	box-shadow: var(--shadow-sm) !important;
 }
 
-.upsell-bundle-bump-card:last-child {
-	border-bottom: none !important;
+/* The first offer becomes a featured frame spanning the full width. */
+.upsell-bundle-bump-card:first-child {
+	grid-column: 1 / -1 !important;
+	flex-direction: row !important;
+	align-items: center !important;
 }
 
 .upsell-bundle-bump-card.bump-checked {
+	border-color: var(--primary) !important;
 	background: var(--muted) !important;
+	box-shadow: var(--shadow-md) !important;
 }
 
 .upsell-bundle-bump-card.bump-loading {
@@ -198,7 +206,7 @@
 	height: 56px !important;
 	flex-shrink: 0 !important;
 	margin-right: 14px !important;
-	border-radius: 0 !important;
+	border-radius: var(--radius-sm) !important;
 	overflow: hidden !important;
 	border: none !important;
 	background: var(--muted) !important;
@@ -210,9 +218,25 @@
 	object-fit: cover !important;
 }
 
+/* Compact cards below the featured offer: image on top, full width. */
+.upsell-bundle-bump-card:not(:first-child) .bump-image {
+	width: 100% !important;
+	height: auto !important;
+	aspect-ratio: 4 / 3 !important;
+	margin-right: 0 !important;
+	margin-bottom: 10px !important;
+}
+
 .bump-details {
 	flex-grow: 1 !important;
 	padding-right: 14px !important;
+	min-width: 0 !important;
+}
+
+/* Compact cards: details fill the frame width. */
+.upsell-bundle-bump-card:not(:first-child) .bump-details {
+	padding-right: 0 !important;
+	width: 100% !important;
 }
 
 .bump-title {
@@ -241,6 +265,14 @@
 	align-items: flex-end !important;
 }
 
+/* Compact cards: price pinned to the bottom of the frame. */
+.upsell-bundle-bump-card:not(:first-child) .bump-pricing {
+	margin-top: auto !important;
+	align-items: flex-start !important;
+	text-align: left !important;
+	width: 100% !important;
+}
+
 .bump-pricing .original-price {
 	text-decoration: line-through !important;
 	font-size: 12px !important;
@@ -254,23 +286,66 @@
 	font-size: 14px !important;
 }
 
+/* Below 768px: single column, every offer uses the horizontal row layout. */
+@media (max-width: 768px) {
+	.upsell-bundle-checkout-bumps {
+		grid-template-columns: 1fr !important;
+		padding: 14px !important;
+	}
+
+	.upsell-bundle-bump-card,
+	.upsell-bundle-bump-card:first-child {
+		grid-column: auto !important;
+		flex-direction: row !important;
+		align-items: flex-start !important;
+	}
+
+	.upsell-bundle-bump-card:not(:first-child) .bump-image {
+		width: 56px !important;
+		height: 56px !important;
+		aspect-ratio: auto !important;
+		margin-right: 14px !important;
+		margin-bottom: 0 !important;
+	}
+
+	.upsell-bundle-bump-card:not(:first-child) .bump-details {
+		padding-right: 14px !important;
+		width: auto !important;
+	}
+
+	.upsell-bundle-bump-card:not(:first-child) .bump-pricing {
+		margin-top: 0 !important;
+		align-items: flex-end !important;
+		text-align: right !important;
+		width: auto !important;
+	}
+}
+
 /* Mobile: pricing wraps to its own row instead of squeezing title/desc
    into a narrow column — this is what caused the badly-wrapped text seen
    on small screens (title/desc pushed into a ~100px sliver). */
 @media (max-width: 480px) {
 	.upsell-bundle-checkout-bumps {
-		padding: 16px 0 0 !important;
+		padding: 14px !important;
 	}
 
 	.upsell-bundle-bump-card {
 		flex-wrap: wrap !important;
-		padding: 12px 0 !important;
+		padding: 12px !important;
 	}
 
 	.bump-image {
 		width: 44px !important;
 		height: 44px !important;
 		margin-right: 10px !important;
+	}
+
+	.upsell-bundle-bump-card:not(:first-child) .bump-image {
+		width: 44px !important;
+		height: 44px !important;
+		aspect-ratio: auto !important;
+		margin-right: 10px !important;
+		margin-bottom: 0 !important;
 	}
 
 	.bump-checkbox-wrapper {
@@ -282,6 +357,10 @@
 		padding-right: 0 !important;
 	}
 
+	.upsell-bundle-bump-card:not(:first-child) .bump-details {
+		width: auto !important;
+	}
+
 	.bump-pricing {
 		flex-basis: 100% !important;
 		flex-direction: row !important;
@@ -289,6 +368,12 @@
 		align-items: baseline !important;
 		gap: 8px !important;
 		margin-top: 8px !important;
+	}
+
+	.upsell-bundle-bump-card:not(:first-child) .bump-pricing {
+		width: auto !important;
+		margin-top: 8px !important;
+		align-items: baseline !important;
 	}
 }
 

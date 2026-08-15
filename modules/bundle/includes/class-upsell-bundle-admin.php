@@ -183,7 +183,7 @@ class Upsell_Bundle_Admin {
 			<!-- 1. ORDER BUMP SUBSECTION -->
 			<div class="upsell-bundle-section">
 				<div class="upsell-bundle-section-header">
-					<h3><?php esc_html_e( '1. Order Bump (Halaman Checkout)', 'upsell-bundle-woocommerce' ); ?></h3>
+					<h3><?php esc_html_e( '1. Order Bump (Checkout Page)', 'upsell-bundle-woocommerce' ); ?></h3>
 					<span class="section-toggle">
 						<label class="switch switch-sm">
 							<input type="checkbox" name="_upsell_bundle_bump_enabled" value="yes" <?php checked( $bump_enabled, 'yes' ); ?> class="section-enable-toggle" />
@@ -196,9 +196,9 @@ class Upsell_Bundle_Admin {
 						<thead>
 							<tr>
 								<th style="width: 32%;"><?php esc_html_e( 'Select Bump Product', 'upsell-bundle-woocommerce' ); ?></th>
-								<th style="width: 24%;"><?php esc_html_e( 'Override Judul (Opsional)', 'upsell-bundle-woocommerce' ); ?></th>
+								<th style="width: 20%;"><?php esc_html_e( 'Custom Title (Optional)', 'upsell-bundle-woocommerce' ); ?></th>
 								<th style="width: 26%;"><?php esc_html_e( 'Offer Description', 'upsell-bundle-woocommerce' ); ?></th>
-								<th style="width: 12%;"><?php esc_html_e( 'Diskon (%)', 'upsell-bundle-woocommerce' ); ?></th>
+								<th style="width: 10%;"><?php esc_html_e( 'Discount (%)', 'upsell-bundle-woocommerce' ); ?></th>
 								<th style="width: 6%; text-align: center;"></th>
 							</tr>
 						</thead>
@@ -236,7 +236,7 @@ class Upsell_Bundle_Admin {
 							<?php endforeach; ?>
 						</tbody>
 					</table>
-					<button type="button" class="button button-primary add-row-btn" data-target="order-bump-table"><?php esc_html_e( 'Tambah Order Bump', 'upsell-bundle-woocommerce' ); ?></button>
+					<button type="button" class="button button-primary add-row-btn" data-target="order-bump-table"><?php esc_html_e( 'Add Order Bump', 'upsell-bundle-woocommerce' ); ?></button>
 				</div>
 			</div>
 

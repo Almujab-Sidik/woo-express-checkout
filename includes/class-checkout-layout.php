@@ -23,6 +23,7 @@ class Checkout_Layout
         // Replace WooCommerce's default billing heading with a customer-facing
         // heading that matches the streamlined checkout flow.
         add_filter('gettext', array($this, 'translate_billing_heading'), 10, 3);
+        add_filter('woocommerce_order_button_text', array($this, 'format_order_button_text'), 20);
     }
 
     public function translate_billing_heading($translated, $text, $domain)
@@ -36,6 +37,23 @@ class Checkout_Layout
         return $needs_shipping
             ? __('Contact & Shipping Address', 'woo-express-checkout')
             : __('Contact', 'woo-express-checkout');
+    }
+
+    public function format_order_button_text($default_text)
+    {
+        $text = get_option('wec_checkout_order_button_text', $default_text);
+        $format = get_option('wec_checkout_order_button_format', '{text}');
+
+        if (! $text || ! $format || ! function_exists('WC') || ! WC()->cart) {
+            return $default_text;
+        }
+
+        $price = wp_strip_all_tags(html_entity_decode(WC()->cart->get_total(), ENT_QUOTES, get_bloginfo('charset')));
+        return str_replace(
+            array('{text}', '{price}', '$Price', '$price'),
+            array($text, $price, $price, $price),
+            $format
+        );
     }
 
     public function override_template($template, $template_name, $template_path)

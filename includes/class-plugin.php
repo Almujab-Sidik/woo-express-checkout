@@ -146,6 +146,15 @@ class Plugin
                 null
             );
             wp_enqueue_style('wec-checkout', WEC_URL . 'assets/css/checkout.css', array('wec-font-inter'), WEC_VERSION);
+            wp_add_inline_style(
+                'wec-checkout',
+                sprintf(
+                    ':root { --wec-accent: %1$s; --wec-accent-hover: %2$s; } .wec-payment-section #place_order, .wec-payment-section button#place_order { color: %3$s !important; }',
+                    sanitize_hex_color(get_option('wec_checkout_order_button_background', '#7f54b3')) ?: '#7f54b3',
+                    sanitize_hex_color(get_option('wec_checkout_order_button_hover_background', '#68429a')) ?: '#68429a',
+                    sanitize_hex_color(get_option('wec_checkout_order_button_text_color', '#ffffff')) ?: '#ffffff'
+                )
+            );
             wp_enqueue_script('wec-checkout', WEC_URL . 'assets/js/checkout.js', array(), WEC_VERSION, true);
         }
     }

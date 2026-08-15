@@ -358,6 +358,7 @@
    ------------------------------------------------------------ */
 .upsell-bundle-repeatable-table {
 	width: 100%;
+	table-layout: fixed;
 	border-collapse: separate;
 	border-spacing: 0;
 	margin-bottom: 12px;
@@ -365,6 +366,66 @@
 	border-radius: var(--ub-radius);
 	overflow: hidden;
 	background: #fff;
+}
+
+#order-bump-table th:nth-child(1),
+#order-bump-table td:nth-child(1) {
+	width: 40% !important;
+}
+
+#order-bump-table th:nth-child(2),
+#order-bump-table td:nth-child(2) {
+	width: 20% !important;
+}
+
+#order-bump-table th:nth-child(3),
+#order-bump-table td:nth-child(3) {
+	width: 25% !important;
+}
+
+#order-bump-table th:nth-child(4),
+#order-bump-table td:nth-child(4) {
+	width: 10% !important;
+}
+
+#order-bump-table th:nth-child(5),
+#order-bump-table td:nth-child(5) {
+	width: 5% !important;
+}
+
+#order-bump-table td {
+	min-width: 0;
+}
+
+#order-bump-table input[type="text"],
+#order-bump-table input[type="number"],
+#order-bump-table textarea,
+#order-bump-table .select2-container {
+	box-sizing: border-box;
+	width: 100% !important;
+	max-width: 100%;
+	min-width: 0;
+}
+
+#order-bump-table textarea {
+	height: 64px !important;
+	min-height: 64px;
+	resize: vertical;
+}
+
+#order-bump-table .select2-selection__rendered {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+#order-bump-table .select2-selection--single {
+	height: 42px !important;
+	line-height: 40px !important;
+}
+
+#order-bump-table .select2-selection__arrow {
+	height: 40px !important;
 }
 
 .upsell-bundle-repeatable-table thead th {
@@ -639,4 +700,17 @@
 	font-size: 12px !important;
 	color: var(--ub-muted-fg) !important;
 	font-style: normal !important;
+}
+
+@media (max-width: 900px) {
+	#order-bump-table {
+		display: block;
+		overflow-x: auto;
+	}
+
+	#order-bump-table thead,
+	#order-bump-table tbody,
+	#order-bump-table tr {
+		min-width: 760px;
+	}
 }

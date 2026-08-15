@@ -54,6 +54,11 @@ class Settings
                 'sanitize_callback' => array($this, 'sanitize_product_checkout_slug'),
             )
         );
+        register_setting('wec_checkout_settings_group', 'wec_checkout_order_button_text', array('sanitize_callback' => 'sanitize_text_field'));
+        register_setting('wec_checkout_settings_group', 'wec_checkout_order_button_format', array('sanitize_callback' => 'sanitize_text_field'));
+        register_setting('wec_checkout_settings_group', 'wec_checkout_order_button_background', array('sanitize_callback' => array($this, 'sanitize_checkout_color')));
+        register_setting('wec_checkout_settings_group', 'wec_checkout_order_button_text_color', array('sanitize_callback' => array($this, 'sanitize_checkout_color')));
+        register_setting('wec_checkout_settings_group', 'wec_checkout_order_button_hover_background', array('sanitize_callback' => array($this, 'sanitize_checkout_color')));
 
         // Master module toggles default to off so every feature is opt-in.
         foreach (array('wec_module_checkout_enabled', 'wec_module_bundle_enabled', 'wec_module_coupon_enabled') as $option) {
@@ -78,6 +83,19 @@ class Settings
 
         if (false === get_option('wec_product_checkout_url_slug')) {
             update_option('wec_product_checkout_url_slug', 'checkout');
+        }
+
+        $button_defaults = array(
+            'wec_checkout_order_button_text'             => 'Place order',
+            'wec_checkout_order_button_format'           => '{text}',
+            'wec_checkout_order_button_background'       => '#7f54b3',
+            'wec_checkout_order_button_text_color'       => '#ffffff',
+            'wec_checkout_order_button_hover_background' => '#68429a',
+        );
+        foreach ($button_defaults as $option => $default) {
+            if (false === get_option($option)) {
+                update_option($option, $default);
+            }
         }
 
         // WA Reminder settings
@@ -119,6 +137,11 @@ class Settings
     {
         $slug = sanitize_title($value);
         return $slug ? $slug : 'checkout';
+    }
+
+    public function sanitize_checkout_color($value)
+    {
+        return sanitize_hex_color($value) ?: '#7f54b3';
     }
 
     private function get_default_wa_template()
@@ -197,6 +220,31 @@ class Settings
                                         <input type="checkbox" name="wec_checkout_layout_enabled" value="yes" <?php checked('yes' === get_option('wec_checkout_layout_enabled', 'yes')); ?> />
                                         <?php esc_html_e('Two-column checkout layout with the customer form on the left and a sticky order summary on the right.', 'woo-express-checkout'); ?>
                                     </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><?php esc_html_e('Place Order Button', 'woo-express-checkout'); ?></th>
+                                <td>
+                                    <p>
+                                        <label for="wec_checkout_order_button_text"><strong><?php esc_html_e('Button Text', 'woo-express-checkout'); ?></strong></label><br>
+                                        <input type="text" id="wec_checkout_order_button_text" name="wec_checkout_order_button_text" value="<?php echo esc_attr(get_option('wec_checkout_order_button_text', 'Place order')); ?>" class="regular-text" />
+                                    </p>
+                                    <p>
+                                        <label for="wec_checkout_order_button_format"><strong><?php esc_html_e('Label Format', 'woo-express-checkout'); ?></strong></label><br>
+                                        <input type="text" id="wec_checkout_order_button_format" name="wec_checkout_order_button_format" value="<?php echo esc_attr(get_option('wec_checkout_order_button_format', '{text}')); ?>" class="regular-text" />
+                                        <span class="description"><?php esc_html_e('Use {text} for the button text and $Price for the current order total. Example: {text} $Price', 'woo-express-checkout'); ?></span>
+                                    </p>
+                                    <p>
+                                        <label for="wec_checkout_order_button_background"><strong><?php esc_html_e('Button Color', 'woo-express-checkout'); ?></strong></label><br>
+                                        <input type="color" id="wec_checkout_order_button_background" name="wec_checkout_order_button_background" value="<?php echo esc_attr(get_option('wec_checkout_order_button_background', '#7f54b3')); ?>" />
+                                        <label for="wec_checkout_order_button_text_color" style="margin-left: 12px;"><strong><?php esc_html_e('Text Color', 'woo-express-checkout'); ?></strong></label>
+                                        <input type="color" id="wec_checkout_order_button_text_color" name="wec_checkout_order_button_text_color" value="<?php echo esc_attr(get_option('wec_checkout_order_button_text_color', '#ffffff')); ?>" />
+                                        <label for="wec_checkout_order_button_hover_background" style="margin-left: 12px;"><strong><?php esc_html_e('Hover Color', 'woo-express-checkout'); ?></strong></label>
+                                        <input type="color" id="wec_checkout_order_button_hover_background" name="wec_checkout_order_button_hover_background" value="<?php echo esc_attr(get_option('wec_checkout_order_button_hover_background', '#68429a')); ?>" />
+                                    </p>
+                                    <p class="description">
+                                        <?php esc_html_e('These settings apply to the standard WooCommerce Place Order button on the Express Checkout layout.', 'woo-express-checkout'); ?>
+                                    </p>
                                 </td>
                             </tr>
                             <tr>
