@@ -428,6 +428,38 @@
 	height: 40px !important;
 }
 
+/* Keep the complete order bump row in one aligned grid. */
+#order-bump-table {
+	display: grid;
+	grid-template-columns: minmax(240px, 2.3fr) minmax(170px, 1.3fr) minmax(220px, 1.5fr) 90px 44px;
+	gap: 0;
+	overflow: visible;
+}
+
+#order-bump-table thead,
+#order-bump-table tbody,
+#order-bump-table tr {
+	display: contents;
+}
+
+#order-bump-table th,
+#order-bump-table td {
+	width: auto !important;
+	min-width: 0;
+}
+
+#order-bump-table th:last-child,
+#order-bump-table td:last-child {
+	display: flex !important;
+	align-items: center;
+	justify-content: flex-end;
+	padding-right: 0 !important;
+}
+
+#order-bump-table .remove-row-btn {
+	margin-left: auto;
+}
+
 .upsell-bundle-repeatable-table thead th {
 	text-align: left;
 	padding: 9px 12px !important;
