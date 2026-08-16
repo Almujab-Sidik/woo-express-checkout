@@ -3,7 +3,7 @@ jQuery(document).ready(function($) {
 	$(document).on('change', '.section-enable-toggle', function() {
 		var $section = $(this).closest('.upsell-bundle-section');
 		var $content = $section.find('.upsell-bundle-section-content');
-		
+
 		if ($(this).is(':checked')) {
 			$content.removeClass('disabled-content');
 		} else {
@@ -16,18 +16,18 @@ jQuery(document).ready(function($) {
 		e.preventDefault();
 		var targetTableId = $(this).data('target');
 		var templateId = '';
-		
+
 		if (targetTableId === 'order-bump-table') {
 			templateId = 'order-bump-template-row';
 		} else if (targetTableId === 'post-purchase-table') {
 			templateId = 'post-purchase-template-row';
 		}
-		
+
 		if (templateId) {
 			var $template = $('#' + templateId);
 			if ($template.length) {
 				var $newRow = $template.clone();
-				$newRow.removeAttr('id'); // Remove template ID so it doesn't conflict
+				$newRow.removeAttr('id').addClass('repeatable-row'); // Keep row styling without duplicating the template ID
 
 				// The template's product-search <select> was already turned into
 				// a select2 widget on page load (WooCommerce initializes every

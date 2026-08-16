@@ -368,34 +368,6 @@
 	background: #fff;
 }
 
-#order-bump-table th:nth-child(1),
-#order-bump-table td:nth-child(1) {
-	width: 40% !important;
-}
-
-#order-bump-table th:nth-child(2),
-#order-bump-table td:nth-child(2) {
-	width: 20% !important;
-}
-
-#order-bump-table th:nth-child(3),
-#order-bump-table td:nth-child(3) {
-	width: 25% !important;
-}
-
-#order-bump-table th:nth-child(4),
-#order-bump-table td:nth-child(4) {
-	width: 10% !important;
-}
-
-#order-bump-table th:nth-child(5),
-#order-bump-table td:nth-child(5) {
-	width: 5% !important;
-}
-
-#order-bump-table td {
-	min-width: 0;
-}
 
 #order-bump-table input[type="text"],
 #order-bump-table input[type="number"],
@@ -428,37 +400,6 @@
 	height: 40px !important;
 }
 
-#order-bump-table {
-	display: table;
-	width: 100%;
-	table-layout: fixed;
-	overflow: hidden;
-}
-
-#order-bump-table thead {
-	display: table-header-group;
-}
-
-#order-bump-table tbody {
-	display: table-row-group;
-}
-
-#order-bump-table tr {
-	display: table-row;
-}
-
-#order-bump-table th,
-#order-bump-table td {
-	display: table-cell;
-	min-width: 0;
-}
-
-#order-bump-table th:last-child,
-#order-bump-table td:last-child {
-	text-align: right !important;
-	vertical-align: middle !important;
-	padding-right: 0 !important;
-}
 
 .upsell-bundle-repeatable-table thead th {
 	text-align: left;
@@ -734,18 +675,6 @@
 	font-style: normal !important;
 }
 
-@media (max-width: 900px) {
-	#order-bump-table {
-		display: block;
-		overflow-x: auto;
-	}
-
-	#order-bump-table thead,
-	#order-bump-table tbody,
-	#order-bump-table tr {
-		min-width: 760px;
-	}
-}
 
 /* Stack Order Bump fields into one full-width column. */
 #order-bump-table {
@@ -767,7 +696,7 @@
 	min-width: 0 !important;
 }
 
-#order-bump-table tr.repeatable-row {
+#order-bump-table tbody > tr {
 	position: relative;
 	display: grid !important;
 	grid-template-columns: minmax(0, 1fr);
@@ -783,7 +712,7 @@
 	box-sizing: border-box;
 }
 
-#order-bump-table tr.repeatable-row > td {
+#order-bump-table tbody > tr > td {
 	display: block !important;
 	width: 100% !important;
 	min-width: 0 !important;

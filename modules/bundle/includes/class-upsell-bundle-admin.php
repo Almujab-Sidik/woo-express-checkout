@@ -367,7 +367,7 @@ class Upsell_Bundle_Admin {
 
 		<!-- Hidden template rows for repeatable content in JS -->
 		<table style="display:none;">
-			<tr id="order-bump-template-row">
+			<tr id="order-bump-template-row" class="repeatable-row">
 				<td data-label="Select Bump Product">
 					<select class="wc-product-search" name="upsell_bump_product_id[]" data-placeholder="<?php esc_attr_e( 'Search products...', 'woocommerce' ); ?>" data-action="woocommerce_json_search_products_and_variations" style="width: 100%;">
 					</select>
