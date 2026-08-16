@@ -24,6 +24,7 @@ class Checkout_Layout
         // heading that matches the streamlined checkout flow.
         add_filter('gettext', array($this, 'translate_billing_heading'), 10, 3);
         add_filter('woocommerce_order_button_text', array($this, 'format_order_button_text'), 20);
+        add_filter('woocommerce_order_button_html', array($this, 'format_order_button_html'), 20);
     }
 
     public function translate_billing_heading($translated, $text, $domain)
@@ -53,6 +54,23 @@ class Checkout_Layout
             array('{text}', '{price}', '$Price', '$price'),
             array($text, $price, $price, $price),
             $format
+        );
+    }
+
+    public function format_order_button_html($html)
+    {
+        $label = $this->format_order_button_text('Place order');
+
+        if ('Place order' === $label || false === stripos($html, 'id="place_order"')) {
+            return $html;
+        }
+
+        return preg_replace_callback(
+            '/(<button\b[^>]*\bid=["\']place_order["\'][^>]*>)(.*?)(<\/button>)/is',
+            static function ($matches) use ($label) {
+                return $matches[1] . esc_html($label) . $matches[3];
+            },
+            $html
         );
     }
 
