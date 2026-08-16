@@ -67,8 +67,8 @@ class Upsell_Bundle_Admin {
 			// browsers would otherwise serve a stale cached stylesheet).
 			$css_path = UPSELL_BUNDLE_PATH . 'assets/css/admin.css';
 			$js_path  = UPSELL_BUNDLE_PATH . 'assets/js/admin.js';
-			$css_ver  = file_exists( $css_path ) ? filemtime( $css_path ) : UPSELL_BUNDLE_VERSION;
-			$js_ver   = file_exists( $js_path ) ? filemtime( $js_path ) : UPSELL_BUNDLE_VERSION;
+			$css_ver  = file_exists( $css_path ) ? UPSELL_BUNDLE_VERSION . '.' . filemtime( $css_path ) : UPSELL_BUNDLE_VERSION;
+			$js_ver   = file_exists( $js_path ) ? UPSELL_BUNDLE_VERSION . '.' . filemtime( $js_path ) : UPSELL_BUNDLE_VERSION;
 
 			// Inter font — matches the shadcn-style component design.
 			wp_enqueue_style( 'upsell-bundle-inter', 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap', array(), null );
