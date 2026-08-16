@@ -210,7 +210,7 @@ class Upsell_Bundle_Admin {
 								$discount    = isset( $bump['discount_percent'] ) ? (float) $bump['discount_percent'] : 0;
 								?>
 								<tr class="repeatable-row">
-									<td>
+									<td data-label="Select Bump Product">
 										<select class="wc-product-search" name="upsell_bump_product_id[]" data-placeholder="<?php esc_attr_e( 'Search products...', 'woocommerce' ); ?>" data-action="woocommerce_json_search_products_and_variations" style="width: 100%;">
 											<?php if ( $product_id ) : 
 												$prod = wc_get_product( $product_id );
@@ -220,16 +220,16 @@ class Upsell_Bundle_Admin {
 											endif; ?>
 										</select>
 									</td>
-									<td>
+									<td data-label="Custom Title (Optional)">
 										<input type="text" name="upsell_bump_title[]" value="<?php echo $title; ?>" placeholder="<?php esc_attr_e( 'Default product name', 'upsell-bundle-woocommerce' ); ?>" style="width: 100%;" />
 									</td>
-									<td>
+									<td data-label="Offer Description">
 										<textarea name="upsell_bump_description[]" rows="2" placeholder="<?php esc_attr_e( 'Add a short offer description...', 'upsell-bundle-woocommerce' ); ?>" style="width: 100%; height: 50px;"><?php echo $description; ?></textarea>
 									</td>
-									<td>
+									<td data-label="Discount (%)">
 										<input type="number" name="upsell_bump_discount[]" value="<?php echo esc_attr( $discount ); ?>" min="0" max="100" step="any" placeholder="0" style="width: 100%;" />
 									</td>
-									<td style="text-align: center; vertical-align: middle;">
+									<td class="order-bump-remove-cell" style="text-align: center; vertical-align: middle;">
 										<a href="#" class="button remove-row-btn">&times;</a>
 									</td>
 								</tr>
@@ -368,20 +368,20 @@ class Upsell_Bundle_Admin {
 		<!-- Hidden template rows for repeatable content in JS -->
 		<table style="display:none;">
 			<tr id="order-bump-template-row">
-				<td>
+				<td data-label="Select Bump Product">
 					<select class="wc-product-search" name="upsell_bump_product_id[]" data-placeholder="<?php esc_attr_e( 'Search products...', 'woocommerce' ); ?>" data-action="woocommerce_json_search_products_and_variations" style="width: 100%;">
 					</select>
 				</td>
-				<td>
+				<td data-label="Custom Title (Optional)">
 					<input type="text" name="upsell_bump_title[]" placeholder="<?php esc_attr_e( 'Default product name', 'upsell-bundle-woocommerce' ); ?>" style="width: 100%;" />
 				</td>
-				<td>
+				<td data-label="Offer Description">
 					<textarea name="upsell_bump_description[]" rows="2" placeholder="<?php esc_attr_e( 'Add a short offer description...', 'upsell-bundle-woocommerce' ); ?>" style="width: 100%; height: 50px;"></textarea>
 				</td>
-				<td>
+				<td data-label="Discount (%)">
 					<input type="number" name="upsell_bump_discount[]" value="" min="0" max="100" step="any" placeholder="0" style="width: 100%;" />
 				</td>
-				<td style="text-align: center; vertical-align: middle;">
+				<td class="order-bump-remove-cell" style="text-align: center; vertical-align: middle;">
 					<a href="#" class="button remove-row-btn">&times;</a>
 				</td>
 			</tr>
