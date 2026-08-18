@@ -16,7 +16,11 @@ if (! defined('ABSPATH')) {
 
 <div class="wec-summary-card">
 
-    <h3 class="wec-summary-heading"><?php esc_html_e('Order Summary', 'woo-express-checkout'); ?></h3>
+    <?php
+    $summary_heading = get_option('wcdm_text_order_summary', '');
+    $summary_heading = $summary_heading ? $summary_heading : __('Order Summary', 'woo-express-checkout');
+    ?>
+    <h3 class="wec-summary-heading"><?php echo esc_html($summary_heading); ?></h3>
 
     <?php
     /**
