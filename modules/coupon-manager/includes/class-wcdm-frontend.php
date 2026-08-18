@@ -456,6 +456,7 @@ class WCDM_Frontend
 
             // Order summary mappings
             'Your order',
+            'Order summary',
 
             // Additional Information mappings
             'Additional information',
@@ -513,7 +514,7 @@ class WCDM_Frontend
                 }
             }
             // Category 4: Order Summary
-            elseif ($text === 'Your order') {
+            elseif (in_array($text, array('Your order', 'Order summary'), true)) {
                 $custom = get_option('wcdm_text_order_summary');
                 if (! empty($custom)) {
                     $in_filter = false;

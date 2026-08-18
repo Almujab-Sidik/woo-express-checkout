@@ -138,6 +138,11 @@
 	// Core: inject/update mock widget in the Block Checkout
 	// -----------------------------------------------------------------------
 	function customizeBlockCoupon() {
+		var customOrderSummary = ( p.order_summary_text || '' ).trim();
+		if ( customOrderSummary ) {
+			$( '.wp-block-woocommerce-checkout-order-summary-heading-block, .wc-block-components-order-summary__title, .wc-block-components-checkout-order-summary__title' ).text( customOrderSummary );
+		}
+
 		var $tpl = $( SEL.hiddenTpl );
 		if ( ! $tpl.length ) {
 			return;

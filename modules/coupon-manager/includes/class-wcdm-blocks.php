@@ -73,6 +73,7 @@ class WCDM_Blocks {
 				'checkout_type' => WCDM_Compat::get_checkout_type(),
 				'single_coupon' => get_option( 'wcdm_single_coupon', 'yes' ),
 				'layout_position' => get_option( 'wcdm_layout_position', 'above_payment' ),
+				'order_summary_text' => get_option( 'wcdm_text_order_summary', '' ),
 			)
 		);
 	}
