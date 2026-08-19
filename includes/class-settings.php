@@ -60,6 +60,17 @@ class Settings
         register_setting('wec_checkout_settings_group', 'wec_checkout_order_button_text_color', array('sanitize_callback' => array($this, 'sanitize_checkout_color')));
         register_setting('wec_checkout_settings_group', 'wec_checkout_order_button_hover_background', array('sanitize_callback' => array($this, 'sanitize_checkout_color')));
 
+        // Brand / heading customization.
+        register_setting('wec_checkout_settings_group', 'wec_checkout_brand_text', array('sanitize_callback' => 'sanitize_text_field'));
+        register_setting('wec_checkout_settings_group', 'wec_checkout_brand_logo', array('sanitize_callback' => 'absint'));
+
+        // Payment method images (keyed by method slug).
+        register_setting(
+            'wec_checkout_settings_group',
+            'wec_payment_method_images',
+            array('sanitize_callback' => array($this, 'sanitize_payment_method_images'))
+        );
+
         // Master module toggles default to off so every feature is opt-in.
         foreach (array('wec_module_checkout_enabled', 'wec_module_bundle_enabled', 'wec_module_coupon_enabled') as $option) {
             if (false === get_option($option)) {
@@ -96,6 +107,16 @@ class Settings
             if (false === get_option($option)) {
                 update_option($option, $default);
             }
+        }
+
+        if (false === get_option('wec_checkout_brand_text')) {
+            update_option('wec_checkout_brand_text', 'BiZSchool');
+        }
+        if (false === get_option('wec_checkout_brand_logo')) {
+            update_option('wec_checkout_brand_logo', 0);
+        }
+        if (false === get_option('wec_payment_method_images')) {
+            update_option('wec_payment_method_images', array());
         }
 
         // WA Reminder settings
@@ -142,6 +163,83 @@ class Settings
     public function sanitize_checkout_color($value)
     {
         return sanitize_hex_color($value) ?: '#7f54b3';
+    }
+
+    /**
+     * Sanitize payment method image map: { method_slug => attachment_id }.
+     */
+    public function sanitize_payment_method_images($value)
+    {
+        if (! is_array($value)) {
+            return array();
+        }
+
+        $clean = array();
+        foreach ($value as $slug => $attachment_id) {
+            $slug = sanitize_title($slug);
+            $attachment_id = absint($attachment_id);
+            if ($slug && $attachment_id) {
+                $clean[$slug] = $attachment_id;
+            }
+        }
+
+        return $clean;
+    }
+
+    /**
+     * Render the brand header markup for the checkout page.
+     */
+    public static function render_brand()
+    {
+        $text = get_option('wec_checkout_brand_text', 'BiZSchool');
+        $logo = (int) get_option('wec_checkout_brand_logo', 0);
+
+        if ($logo) {
+            $src = wp_get_attachment_image_url($logo, 'medium');
+            if ($src) {
+                echo '<img class="wec-brand-logo" src="' . esc_url($src) . '" alt="' . esc_attr($text) . '" />';
+                return;
+            }
+        }
+
+        // Fallback: text with a colored period accent.
+        echo '<span>' . esc_html($text) . '<span>.</span></span>';
+    }
+
+    /**
+     * Render the payment methods list with optional uploaded images.
+     */
+    public static function render_payment_methods()
+    {
+        $methods = array(
+            'qris'    => 'QRIS',
+            'bca'     => 'BCA',
+            'mandiri' => 'mandiri',
+            'bni'     => 'BNI',
+            'bri'     => 'BRI',
+            'bsi'     => 'BSI',
+            'dana'    => 'DANA',
+        );
+
+        $images = get_option('wec_payment_method_images', array());
+        if (! is_array($images)) {
+            $images = array();
+        }
+
+        echo '<div class="payment-methods">';
+        foreach ($methods as $slug => $label) {
+            $attachment_id = isset($images[$slug]) ? (int) $images[$slug] : 0;
+            $src = $attachment_id ? wp_get_attachment_image_url($attachment_id, 'medium') : '';
+
+            if ($src) {
+                echo '<span class="payment-method payment-method--' . esc_attr($slug) . '">';
+                echo '<img src="' . esc_url($src) . '" alt="' . esc_attr($label) . '" />';
+                echo '</span>';
+            } else {
+                echo '<span class="payment-method payment-method--' . esc_attr($slug) . '">' . esc_html($label) . '</span>';
+            }
+        }
+        echo '</div>';
     }
 
     private function get_default_wa_template()
@@ -220,6 +318,61 @@ class Settings
                                         <input type="checkbox" name="wec_checkout_layout_enabled" value="yes" <?php checked('yes' === get_option('wec_checkout_layout_enabled', 'yes')); ?> />
                                         <?php esc_html_e('Two-column checkout layout with the customer form on the left and a sticky order summary on the right.', 'woo-express-checkout'); ?>
                                     </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><?php esc_html_e('Brand / Logo', 'woo-express-checkout'); ?></th>
+                                <td>
+                                    <p>
+                                        <label for="wec_checkout_brand_text"><strong><?php esc_html_e('Brand Text', 'woo-express-checkout'); ?></strong></label><br>
+                                        <input type="text" id="wec_checkout_brand_text" name="wec_checkout_brand_text" value="<?php echo esc_attr(get_option('wec_checkout_brand_text', 'BiZSchool')); ?>" class="regular-text" />
+                                        <span class="description"><?php esc_html_e('Shown when no logo is uploaded.', 'woo-express-checkout'); ?></span>
+                                    </p>
+                                    <p>
+                                        <label for="wec_checkout_brand_logo"><strong><?php esc_html_e('Logo Image', 'woo-express-checkout'); ?></strong></label><br>
+                                        <input type="hidden" id="wec_checkout_brand_logo" name="wec_checkout_brand_logo" value="<?php echo esc_attr(get_option('wec_checkout_brand_logo', 0)); ?>" />
+                                        <?php
+                                        $wec_brand_logo_id = (int) get_option('wec_checkout_brand_logo', 0);
+                                        $wec_brand_logo_src = $wec_brand_logo_id ? wp_get_attachment_image_url($wec_brand_logo_id, 'medium') : '';
+                                        ?>
+                                        <img id="wec_checkout_brand_logo_preview" src="<?php echo esc_url($wec_brand_logo_src); ?>" style="max-height:48px; <?php echo $wec_brand_logo_src ? '' : 'display:none;'; ?>" alt="" />
+                                        <button type="button" class="button wec-upload-image" data-target="wec_checkout_brand_logo" data-preview="wec_checkout_brand_logo_preview"><?php esc_html_e('Choose Image', 'woo-express-checkout'); ?></button>
+                                        <button type="button" class="button-link-delete wec-remove-image" data-target="wec_checkout_brand_logo" data-preview="wec_checkout_brand_logo_preview" style="<?php echo $wec_brand_logo_src ? '' : 'display:none;'; ?>"><?php esc_html_e('Remove', 'woo-express-checkout'); ?></button>
+                                    </p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><?php esc_html_e('Payment Method Images', 'woo-express-checkout'); ?></th>
+                                <td>
+                                    <p class="description"><?php esc_html_e('Upload an image for each payment method. Methods without an image fall back to the text label.', 'woo-express-checkout'); ?></p>
+                                    <table class="wec-payment-images" role="presentation">
+                                        <?php
+                                        $wec_payment_methods = array(
+                                            'qris'    => 'QRIS',
+                                            'bca'     => 'BCA',
+                                            'mandiri' => 'mandiri',
+                                            'bni'     => 'BNI',
+                                            'bri'     => 'BRI',
+                                            'bsi'     => 'BSI',
+                                            'dana'    => 'DANA',
+                                        );
+                                        $wec_payment_images = get_option('wec_payment_method_images', array());
+                                        $wec_payment_images = is_array($wec_payment_images) ? $wec_payment_images : array();
+                                        foreach ($wec_payment_methods as $wec_pm_slug => $wec_pm_label) :
+                                            $wec_pm_id = isset($wec_payment_images[$wec_pm_slug]) ? (int) $wec_payment_images[$wec_pm_slug] : 0;
+                                            $wec_pm_src = $wec_pm_id ? wp_get_attachment_image_url($wec_pm_id, 'medium') : '';
+                                        ?>
+                                            <tr>
+                                                <td style="width:80px;"><strong><?php echo esc_html($wec_pm_label); ?></strong></td>
+                                                <td>
+                                                    <input type="hidden" name="wec_payment_method_images[<?php echo esc_attr($wec_pm_slug); ?>]" value="<?php echo esc_attr($wec_pm_id); ?>" />
+                                                    <img class="wec-payment-method-preview" src="<?php echo esc_url($wec_pm_src); ?>" style="max-height:32px; <?php echo $wec_pm_src ? '' : 'display:none;'; ?>" alt="" />
+                                                    <button type="button" class="button wec-upload-image" data-target="wec_payment_method_images[<?php echo esc_attr($wec_pm_slug); ?>]" data-preview="" data-preview-class="wec-payment-method-preview"><?php esc_html_e('Choose Image', 'woo-express-checkout'); ?></button>
+                                                    <button type="button" class="button-link-delete wec-remove-image" data-target="wec_payment_method_images[<?php echo esc_attr($wec_pm_slug); ?>]" data-preview-class="wec-payment-method-preview" style="<?php echo $wec_pm_src ? '' : 'display:none;'; ?>"><?php esc_html_e('Remove', 'woo-express-checkout'); ?></button>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    </table>
                                 </td>
                             </tr>
                             <tr>

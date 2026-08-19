@@ -324,14 +324,9 @@
 /* Mobile: pricing wraps to its own row instead of squeezing title/desc
    into a narrow column — this is what caused the badly-wrapped text seen
    on small screens (title/desc pushed into a ~100px sliver). */
-@media (max-width: 480px) {
+@media (max-width: 576px) {
 	.upsell-bundle-checkout-bumps {
 		padding: 14px !important;
-	}
-
-	.upsell-bundle-bump-card {
-		flex-wrap: wrap !important;
-		padding: 12px !important;
 	}
 
 	.bump-image {
@@ -397,13 +392,20 @@
 .upsell-bundle-checkout-bumps:not(.upsell-bundle-checkout-upgrade-box) .upsell-bundle-bump-card:first-child {
 	display: flex !important;
 	flex-direction: row !important;
-	align-items: flex-start !important;
+	align-items: center !important;
 	grid-column: auto !important;
 	border: none !important;
 	border-bottom: 1px solid var(--border) !important;
 	border-radius: 0 !important;
-	padding: 14px 0 !important;
+	padding: 0 !important;
 	box-shadow: none !important;
+	justify-content: space-between;
+}
+
+.upsell-bump-checkbox-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 4px
 }
 
 .upsell-bundle-checkout-bumps:not(.upsell-bundle-checkout-upgrade-box) .upsell-bundle-bump-card:last-child {
@@ -441,10 +443,10 @@
 		padding: 16px 0 0 !important;
 	}
 
-	.upsell-bundle-checkout-bumps:not(.upsell-bundle-checkout-upgrade-box) .upsell-bundle-bump-card,
+	/*.upsell-bundle-checkout-bumps:not(.upsell-bundle-checkout-upgrade-box) .upsell-bundle-bump-card,
 	.upsell-bundle-checkout-bumps:not(.upsell-bundle-checkout-upgrade-box) .upsell-bundle-bump-card:first-child {
 		padding: 12px 0 !important;
-	}
+	}*/
 
 	.upsell-bundle-checkout-bumps:not(.upsell-bundle-checkout-upgrade-box) .upsell-bundle-bump-card .bump-image {
 		width: 44px !important;
@@ -869,7 +871,7 @@
 	text-decoration: underline !important;
 }
 
-@media (max-width: 500px) {
+@media (max-width: 576px) {
 	.upsell-body {
 		flex-direction: column !important;
 		align-items: center !important;

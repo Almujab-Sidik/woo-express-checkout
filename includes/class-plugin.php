@@ -172,6 +172,7 @@ class Plugin
 
     public function enqueue_admin_assets($hook)
     {
+        wp_enqueue_media();
         wp_enqueue_script('wec-admin', WEC_URL . 'assets/js/admin.js', array('jquery'), WEC_VERSION, true);
         wp_localize_script(
             'wec-admin',

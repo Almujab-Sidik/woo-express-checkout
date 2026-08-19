@@ -1,14 +1,19 @@
 <?php
 
 /**
- * Checkout form with a two-column layout.
+ * Checkout form with a single-column mobile layout and two-column desktop
+ * layout modeled on the BizSchool checkout reference.
  *
- * Override of WooCommerce checkout/form-checkout.php (v9.4.0).
- * The layout places customer details, payment, and order submission on the
- * left, with a sticky desktop summary and mobile accordion on the right.
+ * Overrides WooCommerce checkout/form-checkout.php (v9.4.0).
  *
- * Standard WooCommerce hooks are preserved so integrations such as
- * pixel tracking and CartFlows continue to function.
+ * Customer details (form + payment) sit on the left; the order summary,
+ * coupon, and payment methods sit in a sticky right sidebar on desktop. On
+ * mobile the summary becomes an accordion and the payment methods are shown
+ * inline. The CTA is WooCommerce's place_order button, which renders inside
+ * the payment section.
+ *
+ * Standard WooCommerce hooks are preserved so integrations such as pixel
+ * tracking and CartFlows keep working.
  *
  * @package WEC
  */
@@ -31,31 +36,72 @@ if (! $checkout->is_registration_enabled() && $checkout->is_registration_require
 
 <form name="checkout" method="post" class="checkout woocommerce-checkout wec-checkout-form" action="<?php echo esc_url(wc_get_checkout_url()); ?>" enctype="multipart/form-data" aria-label="<?php esc_attr_e('Checkout', 'woo-express-checkout'); ?>">
 
-    <div class="wec-checkout-wrapper">
+    <div class="wec-checkout-wrapper checkout-page">
 
-        <?php // Mobile-only order summary accordion. ?>
-        <div class="wec-summary-toggle" id="wec-summary-toggle">
-            <button type="button" class="wec-summary-toggle-btn" aria-expanded="false" aria-controls="wec-summary-mobile">
-                <span class="wec-summary-toggle-icon" aria-hidden="true">&#9662;</span>
-                <span class="wec-summary-toggle-label"><?php esc_html_e('View order summary', 'woo-express-checkout'); ?></span>
-                <span class="wec-summary-toggle-total"><?php wc_cart_totals_order_total_html(); ?></span>
-            </button>
-        </div>
+        <div class="checkout-container">
+            <div class="checkout-main">
+                <header class="checkout-header">
+                    <a href="<?php echo esc_url(home_url('/')); ?>" class="brand">
+                        <?php \WEC\Settings::render_brand(); ?>
+                    </a>
+                </header>
 
-        <div class="wec-summary-mobile" id="wec-summary-mobile" hidden>
-            <?php require WEC_PATH . 'templates/checkout/order-summary-content.php'; ?>
-        </div>
+                <div class="trust-indicator">
+                    <span class="trust-star" aria-hidden="true">★</span>
+                    <span><?php esc_html_e('Dipercaya 40.000+ pebisnis', 'woo-express-checkout'); ?><br><?php esc_html_e('di seluruh Indonesia', 'woo-express-checkout'); ?></span>
+                </div>
 
-        <div class="wec-checkout-grid">
+                <?php
+                $checkout_product_name = __('Produk pilihan Anda', 'woo-express-checkout');
+                if (function_exists('WC') && WC()->cart && ! WC()->cart->is_empty()) {
+                    $checkout_items = WC()->cart->get_cart();
+                    $checkout_first_item = reset($checkout_items);
+                    if (! empty($checkout_first_item['data']) && is_object($checkout_first_item['data'])) {
+                        $checkout_product_name = $checkout_first_item['data']->get_name();
+                    }
+                }
+                ?>
+                <div class="product-heading">
+                    <h1><?php echo esc_html($checkout_product_name); ?></h1>
+                </div>
 
-            <!-- ====================== KOLOM KIRI ====================== -->
-            <div class="wec-checkout-col-left">
+                <div class="product-benefits">
+                    <div class="benefit-item"><span class="check-icon">✓</span><span><?php esc_html_e('Sekali bayar, akses selamanya', 'woo-express-checkout'); ?></span></div>
+                    <div class="benefit-item"><span class="check-icon">✓</span><span><?php esc_html_e('Tinggal input data, hasil otomatis', 'woo-express-checkout'); ?></span></div>
+                    <div class="benefit-item"><span class="check-icon">✓</span><span><?php esc_html_e('Ada panduan langkah demi langkah', 'woo-express-checkout'); ?></span></div>
+                </div>
+
+                <div class="access-notice">
+                    <div class="notice-icon" aria-hidden="true">i</div>
+                    <p><?php esc_html_e('Akses produk otomatis dikirim ke', 'woo-express-checkout'); ?> <strong><?php esc_html_e('WhatsApp & email setelah pembayaran.', 'woo-express-checkout'); ?></strong></p>
+                </div>
+
+                <?php // Mobile-only order summary accordion.
+                ?>
+                <div class="mobile-order-summary">
+                    <details class="order-summary">
+                        <summary>
+                            <div class="summary-product">
+                                <span class="cart-icon" aria-hidden="true">&#128722;</span>
+                                <span><?php echo esc_html($checkout_product_name); ?></span>
+                            </div>
+                            <div class="summary-right">
+                                <strong><?php wc_cart_totals_order_total_html(); ?></strong>
+                                <span class="summary-arrow">&#8964;</span>
+                            </div>
+                        </summary>
+
+                        <div class="summary-content">
+                            <?php require WEC_PATH . 'templates/checkout/order-summary-content.php'; ?>
+                        </div>
+                    </details>
+                </div>
 
                 <?php if ($checkout->get_checkout_fields()) : ?>
 
                     <?php do_action('woocommerce_checkout_before_customer_details'); ?>
 
-                    <div id="customer_details" class="wec-customer-details">
+                    <div id="customer_details" class="wec-customer-details customer-section">
                         <?php do_action('woocommerce_checkout_billing'); ?>
                         <?php do_action('woocommerce_checkout_shipping'); ?>
                     </div>
@@ -72,25 +118,29 @@ if (! $checkout->is_registration_enabled() && $checkout->is_registration_require
                 // fragments and replace the payment section during AJAX calls.
                 ?>
                 <div id="order_review" class="woocommerce-checkout-review-order wec-payment-section">
-                    <h3 class="wec-section-title"><?php esc_html_e('Payment', 'woo-express-checkout'); ?></h3>
                     <?php woocommerce_checkout_payment(); ?>
                 </div>
 
                 <?php do_action('woocommerce_checkout_after_order_review'); ?>
 
-            </div>
+                <?php // Security reassurance + accepted payment methods (mobile).
+                ?>
+                <div class="mobile-payment">
+                    <div class="security-text">
+                        <span aria-hidden="true">&#128274;</span>
+                        <?php esc_html_e('Pembayaran aman & terenkripsi', 'woo-express-checkout'); ?>
+                    </div>
 
-            <!-- ====================== KOLOM KANAN ====================== -->
-            <aside class="wec-checkout-col-right">
-                <div class="wec-order-summary wec-order-summary--desktop">
-
-                    <?php require WEC_PATH . 'templates/checkout/order-summary-content.php'; ?>
-
+                    <div class="payment-methods">
+                        <?php \WEC\Settings::render_payment_methods(); ?>
+                    </div>
                 </div>
-            </aside>
 
-        </div><!-- .wec-checkout-grid -->
+            </div><!-- .checkout-main -->
 
+            <?php require WEC_PATH . 'templates/checkout/checkout-sidebar.php'; ?>
+
+        </div><!-- .checkout-container -->
     </div><!-- .wec-checkout-wrapper -->
 
 </form>
