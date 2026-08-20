@@ -123,7 +123,7 @@ if (! $checkout->is_registration_enabled() && $checkout->is_registration_require
 
                 <?php do_action('woocommerce_checkout_after_order_review'); ?>
 
-                <?php // Security reassurance + accepted payment methods (mobile).
+                <?php // Security reassurance + accepted payment methods (all screens).
                 ?>
                 <div class="mobile-payment">
                     <div class="security-text">

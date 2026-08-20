@@ -1191,7 +1191,6 @@ body.wec-express-checkout .wec-checkout-wrapper {
 	.checkout-page .access-notice { margin-bottom: 26px; }
 
 	.checkout-page .mobile-order-summary { display: none; }
-	.checkout-page .mobile-payment { display: none; }
 
 	.checkout-page .customer-section h2,
 	.checkout-page .order-bump-section h2 { font-size: 16px; }
