@@ -51,7 +51,9 @@ class WCDM_Frontend
         $layout_position = get_option('wcdm_layout_position', 'above_payment');
 
         if ('sidebar' === $layout_position) {
-            add_action('woocommerce_checkout_before_order_review', array($this, 'render_repositioned_coupon_field'));
+            // The Express Checkout order summary is a custom sidebar and does
+            // not execute WooCommerce's before-order-review hook inside it.
+            add_action('wec_checkout_sidebar_coupon', array($this, 'render_repositioned_coupon_field'));
         } else {
             add_action('woocommerce_review_order_before_submit', array($this, 'render_repositioned_coupon_field'), 5);
 
