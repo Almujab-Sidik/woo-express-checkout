@@ -4,7 +4,7 @@
  * Plugin Name: WooCommerce Express Checkout
  * Plugin URI:  https://era.ai/woo-express-checkout
  * Description: Streamlined WooCommerce checkout with guest checkout, minimal fields, bundle offers, and automatic account creation.
- * Version:     0.1.28
+ * Version:     0.1.29
  * Author:      Era AI
  * Text Domain: woo-express-checkout
  * Domain Path: /languages
@@ -22,7 +22,7 @@ if (! defined('ABSPATH')) {
     exit;
 }
 
-define('WEC_VERSION', '0.1.28');
+define('WEC_VERSION', '0.1.29');
 define('WEC_FILE', __FILE__);
 define('WEC_PATH', plugin_dir_path(__FILE__));
 define('WEC_URL', plugin_dir_url(__FILE__));
