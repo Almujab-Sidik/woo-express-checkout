@@ -54,6 +54,7 @@ class WCDM_Frontend
             // The Express Checkout order summary is a custom sidebar and does
             // not execute WooCommerce's before-order-review hook inside it.
             add_action('wec_checkout_sidebar_coupon', array($this, 'render_repositioned_coupon_field'));
+            add_action('wec_checkout_mobile_coupon', array($this, 'render_repositioned_coupon_field'));
         } else {
             add_action('woocommerce_review_order_before_submit', array($this, 'render_repositioned_coupon_field'), 5);
 
@@ -91,13 +92,6 @@ class WCDM_Frontend
      */
     public function render_repositioned_coupon_field()
     {
-        // Render only once per page, even if multiple hooks fire.
-        static $rendered = false;
-        if ($rendered) {
-            return;
-        }
-        $rendered = true;
-
         if (! WC()->cart) {
             return;
         }
@@ -120,7 +114,13 @@ class WCDM_Frontend
         $layout_position = get_option('wcdm_layout_position', 'above_payment');
         $is_dropdown     = 'yes' === get_option('wcdm_dropdown_hide', 'no');
 
+        $location = current_filter();
         $wrapper_class = 'wcdm-checkout-coupon-repositioned';
+        if ('wec_checkout_mobile_coupon' === $location) {
+            $wrapper_class .= ' wcdm-coupon-location-mobile';
+        } elseif ('wec_checkout_sidebar_coupon' === $location) {
+            $wrapper_class .= ' wcdm-coupon-location-desktop';
+        }
         if ($is_dropdown) {
             $wrapper_class .= ' wcdm-layout-dropdown-hide';
         }
@@ -131,8 +131,11 @@ class WCDM_Frontend
         <div class="<?php echo esc_attr($wrapper_class); ?>">
             <?php if ($is_dropdown) : ?>
                 <a href="#" class="wcdm-dropdown-toggle" style="<?php echo $has_coupon ? 'display: none;' : ''; ?>">
-                    <?php echo esc_html(get_option('wcdm_dropdown_text', __('Have a coupon?', 'coupon-display-manager-for-woocommerce'))); ?>
+                    <span aria-hidden="true">🏷️</span>
+                    <?php echo esc_html(get_option('wcdm_dropdown_text', __('Punya kode promo?', 'coupon-display-manager-for-woocommerce'))); ?>
                 </a>
+            <?php else : ?>
+                <div class="wcdm-coupon-card-label"><span aria-hidden="true">🏷️</span> <?php esc_html_e('Punya kode promo?', 'coupon-display-manager-for-woocommerce'); ?></div>
             <?php endif; ?>
 
             <div class="wcdm-dropdown-content" style="<?php echo ($is_dropdown && ! $has_coupon) ? 'display: none;' : ''; ?>">
@@ -163,12 +166,11 @@ class WCDM_Frontend
                             <div class="wcdm-coupon-input-wrapper">
                                 <input
                                     type="text"
-                                    id="wcdm_coupon_code_mock"
-                                    class="input-text"
-                                    placeholder="<?php esc_attr_e('Coupon Code', 'coupon-display-manager-for-woocommerce'); ?>"
+                                    class="input-text wcdm-coupon-code-mock"
+                                    placeholder="<?php esc_attr_e('Masukkan kode promo', 'coupon-display-manager-for-woocommerce'); ?>"
                                     value=""
                                     autocomplete="off" />
-                                <button type="button" id="wcdm_apply_coupon_mock" class="<?php echo esc_attr($btn_class); ?>">
+                                <button type="button" class="wcdm-apply-coupon-mock <?php echo esc_attr($btn_class); ?>">
                                     <?php echo esc_html($button_text); ?>
                                 </button>
                             </div>
@@ -178,12 +180,11 @@ class WCDM_Frontend
                             <div class="wcdm-coupon-input-wrapper">
                                 <input
                                     type="text"
-                                    id="wcdm_coupon_code_mock"
-                                    class="input-text"
-                                    placeholder="<?php esc_attr_e('Coupon Code', 'coupon-display-manager-for-woocommerce'); ?>"
+                                    class="input-text wcdm-coupon-code-mock"
+                                    placeholder="<?php esc_attr_e('Masukkan kode promo', 'coupon-display-manager-for-woocommerce'); ?>"
                                     value=""
                                     autocomplete="off" />
-                                <button type="button" id="wcdm_apply_coupon_mock" class="<?php echo esc_attr($btn_class); ?>">
+                                <button type="button" class="wcdm-apply-coupon-mock <?php echo esc_attr($btn_class); ?>">
                                     <?php echo esc_html($button_text); ?>
                                 </button>
                             </div>
@@ -227,8 +228,11 @@ class WCDM_Frontend
         <div class="<?php echo esc_attr($wrapper_class); ?>">
             <?php if ($is_dropdown) : ?>
                 <a href="#" class="wcdm-dropdown-toggle">
-                    <?php echo esc_html(get_option('wcdm_dropdown_text', __('Have a coupon?', 'coupon-display-manager-for-woocommerce'))); ?>
+                    <span aria-hidden="true">🏷️</span>
+                    <?php echo esc_html(get_option('wcdm_dropdown_text', __('Punya kode promo?', 'coupon-display-manager-for-woocommerce'))); ?>
                 </a>
+            <?php else : ?>
+                <div class="wcdm-coupon-card-label"><span aria-hidden="true">🏷️</span> <?php esc_html_e('Punya kode promo?', 'coupon-display-manager-for-woocommerce'); ?></div>
             <?php endif; ?>
 
             <div class="wcdm-dropdown-content" style="<?php echo $is_dropdown ? 'display: none;' : ''; ?>">
@@ -242,12 +246,11 @@ class WCDM_Frontend
                         <div class="wcdm-coupon-input-wrapper">
                             <input
                                 type="text"
-                                id="wcdm_coupon_code_mock"
-                                class="input-text"
-                                placeholder="<?php esc_attr_e('Coupon Code', 'coupon-display-manager-for-woocommerce'); ?>"
+                                class="input-text wcdm-coupon-code-mock"
+                                placeholder="<?php esc_attr_e('Masukkan kode promo', 'coupon-display-manager-for-woocommerce'); ?>"
                                 value=""
                                 autocomplete="off" />
-                            <button type="button" id="wcdm_apply_coupon_mock" class="<?php echo esc_attr($btn_class); ?>">
+                            <button type="button" class="wcdm-apply-coupon-mock <?php echo esc_attr($btn_class); ?>">
                                 <?php echo esc_html($button_text); ?>
                             </button>
                         </div>

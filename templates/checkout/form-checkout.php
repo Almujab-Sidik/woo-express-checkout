@@ -93,6 +93,7 @@ if (! $checkout->is_registration_enabled() && $checkout->is_registration_require
 
                         <div class="summary-content">
                             <?php require WEC_PATH . 'templates/checkout/order-summary-content.php'; ?>
+                            <?php do_action('wec_checkout_mobile_coupon'); ?>
                         </div>
                     </details>
                 </div>
