@@ -18,6 +18,8 @@ class Checkout_Layout
     public function __construct()
     {
         add_filter('woocommerce_locate_template', array($this, 'override_template'), 10, 3);
+        add_filter('template_include', array($this, 'use_checkout_canvas'), 99);
+        add_filter('body_class', array($this, 'add_checkout_body_class'));
         add_action('init', array($this, 'reposition_coupon'));
 
         // Replace WooCommerce's default billing heading with a customer-facing
@@ -93,6 +95,35 @@ class Checkout_Layout
     }
 
     /**
+     * Render the main checkout in a theme-independent canvas.
+     *
+     * Theme page templates add their own header, footer, title, content-width,
+     * and global padding around the checkout shortcode. Those wrappers can
+     * collapse the two-column checkout after a theme update, so the checkout
+     * page deliberately keeps wp_head()/wp_footer() while omitting theme
+     * chrome.
+     */
+    public function use_checkout_canvas($template)
+    {
+        if (! $this->is_express_checkout_page()) {
+            return $template;
+        }
+
+        $canvas_template = WEC_PATH . 'templates/checkout/full-page-checkout.php';
+
+        return file_exists($canvas_template) ? $canvas_template : $template;
+    }
+
+    public function add_checkout_body_class($classes)
+    {
+        if ($this->is_express_checkout_page()) {
+            $classes[] = 'wec-express-checkout';
+        }
+
+        return $classes;
+    }
+
+    /**
      * Remove WooCommerce's native coupon form from its default position.
      */
     public function reposition_coupon()
@@ -113,6 +144,28 @@ class Checkout_Layout
         }
 
         return true;
+    }
+
+    private function is_express_checkout_page()
+    {
+        if (! $this->should_override() || ! function_exists('is_checkout') || ! is_checkout()) {
+            return false;
+        }
+
+        if (is_singular(Product_Checkout::POST_TYPE)) {
+            // Elementor-built checkout pages intentionally own their canvas.
+            return 'builder' !== get_post_meta(get_queried_object_id(), '_elementor_edit_mode', true);
+        }
+
+        // Payment and confirmation endpoints have their own WooCommerce
+        // templates and must keep their normal page chrome.
+        if (function_exists('is_wc_endpoint_url') && is_wc_endpoint_url()) {
+            return false;
+        }
+
+        $checkout_page_id = function_exists('wc_get_page_id') ? wc_get_page_id('checkout') : 0;
+
+        return $checkout_page_id > 0 && is_page($checkout_page_id);
     }
 
     private function is_cartflows_page()

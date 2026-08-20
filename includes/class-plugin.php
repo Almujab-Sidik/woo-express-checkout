@@ -30,8 +30,10 @@ class Plugin
     {
         add_action('init', array($this, 'load_textdomain'));
         add_action('woocommerce_loaded', array($this, 'register_emails'));
-        add_action('wp_enqueue_scripts', array($this, 'enqueue_assets'));
+        // Bundle styles contain generic WooCommerce rules. Load them first so
+        // the checkout stylesheet can provide the final, layout-specific layer.
         add_action('wp_enqueue_scripts', array($this, 'enqueue_bundle_frontend_assets'));
+        add_action('wp_enqueue_scripts', array($this, 'enqueue_assets'));
         add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_assets'));
         add_action('admin_notices', array($this, 'maybe_block_checkout_notice'));
         add_action('wp_ajax_wec_dismiss_notice', array($this, 'handle_dismiss_notice'));

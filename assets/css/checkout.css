@@ -26,9 +26,24 @@
 	--wec-radius-sm: 5px;
 }
 
-.has-global-padding {
-  padding-left: 16px !important;
-  padding-right: 16px !important;
+/* The checkout owns its canvas; theme global spacing must not resize it. */
+body.wec-express-checkout {
+	min-height: 100vh;
+	margin: 0 !important;
+	background: #f4f4f5 !important;
+}
+
+body.wec-express-checkout .wec-checkout-canvas {
+	min-height: 100vh;
+	background: #f4f4f5;
+}
+
+body.wec-express-checkout .woocommerce,
+body.wec-express-checkout form.checkout,
+body.wec-express-checkout .wec-checkout-wrapper {
+	width: 100% !important;
+	max-width: none !important;
+	margin: 0 !important;
 }
 /* ============================================================
    Phase 1 — Guest checkout field cleanup & WooCommerce resets
@@ -469,6 +484,8 @@
 
 /* ---------- Payment methods ---------- */
 .wec-payment-section ul.wc_payment_methods {
+	display: block !important;
+	width: 100% !important;
 	list-style: none !important;
 	padding: 0 !important;
 	margin: 0 0 18px !important;
@@ -479,6 +496,9 @@
 }
 
 .wec-payment-section ul.wc_payment_methods li {
+	display: block !important;
+	width: 100% !important;
+	box-sizing: border-box !important;
 	padding: 13px 0 !important;
 	border-bottom: 1px solid var(--wec-border-soft) !important;
 	margin: 0 !important;
@@ -503,6 +523,8 @@
 }
 
 .wec-payment-section .payment_box {
+	width: 100% !important;
+	box-sizing: border-box !important;
 	background-color: var(--wec-muted) !important;
 	border: none !important;
 	border-radius: 0 !important;
@@ -619,7 +641,7 @@
 
 .checkout-page {
 	min-height: 100vh;
-	background: #ffffff !important;
+	background: transparent !important;
 }
 
 .checkout-page .checkout-container {
@@ -858,11 +880,18 @@
 /* Order bump section (rendered by module's hook) */
 .checkout-page .order-bump-section,
 .checkout-page .upsell-bundle-checkout-bumps {
+	display: block !important;
 	margin: 0 0 6px !important;
 	padding: 0 !important;
 	border: 0 !important;
 	background: transparent !important;
 	box-shadow: none !important;
+}
+
+/* The current order-bump markup groups its image and copy in a wrapper.
+   Let those children participate in the card grid directly. */
+.checkout-page .order-bump-section .upsell-bump-checkbox-wrapper {
+	display: contents !important;
 }
 
 .checkout-page .order-bump-section h4,
@@ -998,6 +1027,10 @@
 	color: #183b77;
 }
 
+.checkout-page .mobile-payment {
+	display: block;
+}
+
 .checkout-page .payment-methods span {
 	display: inline-flex;
 	min-height: 23px;
@@ -1107,6 +1140,7 @@
 	.checkout-page .access-notice { margin-bottom: 26px; }
 
 	.checkout-page .mobile-order-summary { display: none; }
+	.checkout-page .mobile-payment { display: none; }
 
 	.checkout-page .customer-section h2,
 	.checkout-page .order-bump-section h2 { font-size: 16px; }
@@ -1241,6 +1275,10 @@
 	}
 
 	.checkout-page .order-bump-section .bump-image { width: 46px; height: 57px; }
+	.checkout-page .order-bump-section .bump-action {
+		grid-column: 1 / -1;
+		width: 100%;
+	}
 
 	.checkout-page .order-bump-section .add-text { width: 100%; }
 	.checkout-page .order-bump-section .added-text { width: 100%; justify-content: center; }

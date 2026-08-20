@@ -131,9 +131,7 @@ if (! $checkout->is_registration_enabled() && $checkout->is_registration_require
                         <?php esc_html_e('Pembayaran aman & terenkripsi', 'woo-express-checkout'); ?>
                     </div>
 
-                    <div class="payment-methods">
-                        <?php \WEC\Settings::render_payment_methods(); ?>
-                    </div>
+                    <?php \WEC\Settings::render_payment_methods(); ?>
                 </div>
 
             </div><!-- .checkout-main -->
