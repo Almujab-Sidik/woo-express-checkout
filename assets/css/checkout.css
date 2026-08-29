@@ -980,12 +980,21 @@ body.wec-express-checkout .wec-checkout-wrapper {
 
 .checkout-page .order-bump-section .bump-title {
 	display: block !important;
-	margin: 0 0 6px !important;
 	color: #0f172a !important;
 	font-size: 13px !important;
 	font-weight: 800 !important;
 	line-height: 1.35 !important;
 }
+
+.checkout-page .order-bump-section .bump-desc {
+	display: block !important;
+	color: #818387 !important;
+	margin: 6px 0 !important;
+	font-size: 12px !important;
+	font-weight: 600 !important;
+	line-height: 1.35 !important;
+}
+
 
 .checkout-page .order-bump-section .bump-price {
 	display: flex !important;
