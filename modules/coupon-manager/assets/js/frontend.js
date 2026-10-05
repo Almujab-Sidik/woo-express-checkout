@@ -30,8 +30,8 @@
 	// Selector map — add new checkout builders here, no logic changes needed.
 	// -------------------------------------------------------------------------
 	var SEL = {
-		mockInput   : '.wcdm-checkout-coupon-repositioned:not(#wcdm-repositioned-coupon-html-hidden *) #wcdm_coupon_code_mock',
-		mockBtn     : '.wcdm-checkout-coupon-repositioned:not(#wcdm-repositioned-coupon-html-hidden *) #wcdm_apply_coupon_mock',
+		mockInput   : '.wcdm-checkout-coupon-repositioned:not(#wcdm-repositioned-coupon-html-hidden *) .wcdm-coupon-code-mock',
+		mockBtn     : '.wcdm-checkout-coupon-repositioned:not(#wcdm-repositioned-coupon-html-hidden *) .wcdm-apply-coupon-mock',
 		mockWrap    : '.wcdm-checkout-coupon-repositioned:not(#wcdm-repositioned-coupon-html-hidden *)',
 		hiddenTpl   : '#wcdm-repositioned-coupon-html-hidden',
 		realInput   : '#coupon_code',
@@ -160,8 +160,8 @@
 		if ( p.show_input === 'yes' && ! isSingleCoupon ) {
 			pillsHtml += '<div class="wcdm-coupon-input-wrapper-spacer" style="margin-top: 12px;"></div>' +
 				'<div class="wcdm-coupon-input-wrapper">' +
-					'<input type="text" id="wcdm_coupon_code_mock" class="input-text" placeholder="' + ( p.placeholder_text || 'Coupon Code' ) + '" value="" autocomplete="off" />' +
-					'<button type="button" id="wcdm_apply_coupon_mock" class="button">' + ( p.button_text || 'Apply Coupon' ) + '</button>' +
+					'<input type="text" class="input-text wcdm-coupon-code-mock" placeholder="' + ( p.placeholder_text || 'Masukkan kode promo' ) + '" value="" autocomplete="off" />' +
+					'<button type="button" class="button wcdm-apply-coupon-mock">' + ( p.button_text || 'Apply Coupon' ) + '</button>' +
 				'</div>';
 		}
 
@@ -252,9 +252,11 @@
 		$( document.body ).on( 'click', SEL.mockBtn, function ( e ) {
 			e.preventDefault();
 
-			var code = $( SEL.mockInput ).val().trim();
+			var $wrap = $( this ).closest( '.wcdm-checkout-coupon-repositioned' );
+			var $input = $wrap.find( '.wcdm-coupon-code-mock' ).first();
+			var code = ( $input.val() || '' ).trim();
 			if ( ! code ) {
-				$( SEL.mockInput ).focus();
+				$input.focus();
 				return;
 			}
 			applyCode( code );

@@ -181,6 +181,9 @@ class Upsell_Bundle_Order_Bump
 
                     <div class="bump-content">
                         <strong class="bump-title"><?php echo esc_html($display_title); ?></strong>
+                        <?php if (! empty($bump['description'])) : ?>
+                            <p class="bump-desc"><?php echo esc_html($bump['description']); ?></p>
+                        <?php endif; ?>
                         <div class="bump-price">
                             <?php if ($bump_price < $original_price) : ?>
                                 <del><?php echo wc_price($original_price); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped

@@ -112,7 +112,7 @@
    2. Apply Button Style Presets
    ========================================================================== */
 
-#wcdm_apply_coupon_mock,
+.wcdm-apply-coupon-mock,
 .wcdm-btn-secondary,
 .wcdm-btn-link,
 .wcdm-btn-custom {
@@ -134,7 +134,7 @@
 	border          : 1px solid transparent;
 }
 
-#wcdm_apply_coupon_mock:active {
+.wcdm-apply-coupon-mock:active {
 	transform       : scale(0.98);
 }
 
@@ -340,7 +340,7 @@ body.wcdm-coupon-active .woocommerce-message {
 		width         : 100% !important;
 	}
 
-	#wcdm_apply_coupon_mock,
+	.wcdm-apply-coupon-mock,
 	.wcdm-btn-secondary,
 	.wcdm-btn-link,
 	.wcdm-btn-custom {
@@ -363,6 +363,93 @@ body.wcdm-coupon-active .woocommerce-message {
 		margin-left   : 0;
 		width         : 100%;
 		text-align    : left;
+	}
+}
+
+/* ==========================================================================
+   8. Express Checkout responsive coupon placement
+   ========================================================================== */
+.checkout-page .wcdm-checkout-coupon-repositioned {
+	width: 100% !important;
+	margin: 14px 0 0 !important;
+	padding: 16px !important;
+	border: 1px solid #e2e8f0 !important;
+	border-radius: 16px !important;
+	background: #ffffff !important;
+	box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05) !important;
+}
+
+.checkout-page .wcdm-coupon-card-label,
+.checkout-page .wcdm-checkout-coupon-repositioned .wcdm-dropdown-toggle {
+	display: flex !important;
+	align-items: center !important;
+	gap: 5px !important;
+	margin: 0 0 8px !important;
+	padding: 0 !important;
+	color: #334155 !important;
+	font-size: 12px !important;
+	font-weight: 800 !important;
+	line-height: 1.4 !important;
+	text-decoration: none !important;
+}
+
+.checkout-page .wcdm-checkout-coupon-repositioned .wcdm-coupon-input-wrapper {
+	display: flex !important;
+	flex-flow: row nowrap !important;
+	align-items: stretch !important;
+	gap: 8px !important;
+}
+
+.checkout-page .wcdm-checkout-coupon-repositioned input.wcdm-coupon-code-mock {
+	flex: 1 1 auto !important;
+	width: auto !important;
+	min-width: 0 !important;
+	height: 38px !important;
+	padding: 8px 12px !important;
+	border: 1px solid #cbd5e1 !important;
+	border-radius: 8px !important;
+	font-size: 12px !important;
+	line-height: 20px !important;
+	text-transform: uppercase !important;
+}
+
+.checkout-page .wcdm-checkout-coupon-repositioned input.wcdm-coupon-code-mock:focus {
+	border-color: var(--wec-accent, #ff391b) !important;
+	box-shadow: 0 0 0 3px rgba(255, 57, 27, 0.12) !important;
+	outline: none !important;
+}
+
+.checkout-page .wcdm-checkout-coupon-repositioned .wcdm-apply-coupon-mock {
+	flex: 0 0 auto !important;
+	width: auto !important;
+	height: 38px !important;
+	padding: 0 16px !important;
+	border: 1px solid var(--wec-accent, #ff391b) !important;
+	border-radius: 8px !important;
+	background: var(--wec-accent, #ff391b) !important;
+	color: #ffffff !important;
+	font-size: 12px !important;
+	font-weight: 800 !important;
+	line-height: 1 !important;
+	text-decoration: none !important;
+}
+
+.checkout-page .wcdm-checkout-coupon-repositioned .wcdm-apply-coupon-mock:hover {
+	border-color: var(--wec-accent-hover, #e92f15) !important;
+	background: var(--wec-accent-hover, #e92f15) !important;
+	color: #ffffff !important;
+}
+
+.checkout-page .wcdm-checkout-coupon-repositioned .wcdm-coupon-hint {
+	margin-top: 6px !important;
+	color: #94a3b8 !important;
+	font-size: 10px !important;
+	font-weight: 500 !important;
+}
+
+@media (max-width: 600px) {
+	.checkout-page .wcdm-coupon-location-mobile {
+		padding: 14px !important;
 	}
 }
 

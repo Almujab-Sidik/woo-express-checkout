@@ -24,5 +24,13 @@ if (! defined('ABSPATH')) {
             <?php require WEC_PATH . 'templates/checkout/order-summary-content.php'; ?>
         </div>
 
+        <?php
+        /**
+         * Coupon Display Manager uses this location when its layout is set to
+         * "WooCommerce Default / Sidebar".
+         */
+        do_action('wec_checkout_sidebar_coupon');
+        ?>
+
     </div>
 </aside>

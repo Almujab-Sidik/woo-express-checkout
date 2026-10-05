@@ -95,6 +95,7 @@ if (! $checkout->is_registration_enabled() && $checkout->is_registration_require
                             <?php require WEC_PATH . 'templates/checkout/order-summary-content.php'; ?>
                         </div>
                     </details>
+                    <?php do_action('wec_checkout_mobile_coupon'); ?>
                 </div>
 
                 <?php if ($checkout->get_checkout_fields()) : ?>
@@ -123,7 +124,7 @@ if (! $checkout->is_registration_enabled() && $checkout->is_registration_require
 
                 <?php do_action('woocommerce_checkout_after_order_review'); ?>
 
-                <?php // Security reassurance + accepted payment methods (mobile).
+                <?php // Security reassurance + accepted payment methods (all screens).
                 ?>
                 <div class="mobile-payment">
                     <div class="security-text">
@@ -131,9 +132,7 @@ if (! $checkout->is_registration_enabled() && $checkout->is_registration_require
                         <?php esc_html_e('Pembayaran aman & terenkripsi', 'woo-express-checkout'); ?>
                     </div>
 
-                    <div class="payment-methods">
-                        <?php \WEC\Settings::render_payment_methods(); ?>
-                    </div>
+                    <?php \WEC\Settings::render_payment_methods(); ?>
                 </div>
 
             </div><!-- .checkout-main -->
